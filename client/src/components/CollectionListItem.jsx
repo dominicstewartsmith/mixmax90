@@ -1,5 +1,9 @@
 import React from 'react'
 
+//TODO make this info dynamic:
+// 1) acceepting props from collection list
+
+
 const CollectionListItem = () => {
   return (
     <>

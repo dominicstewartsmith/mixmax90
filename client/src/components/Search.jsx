@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { BsSearchHeart } from "react-icons/bs";
 import { GoHeart } from "react-icons/go";
 import { TbReload } from "react-icons/tb";
+import apiService from "../ApiService";
 
 const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrentTopTracks }) => {
   const [topTracks, setTopTracks] = useState([]);
@@ -15,34 +16,11 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
     getCurrentTopTracks()
   }, [])
 
-  let accessToken = null;
+  const accessToken = apiService.getToken();
   
   let artistName = search.replace(/\s+/g, "+");
-  // let artistTitle = null
-  
-
-  const getToken = async () => {
-    const url = "https://accounts.spotify.com/api/token";
-    const client_id = import.meta.env.VITE_APP_SPOTIFY_CLIENT_ID;
-    const client_secret = import.meta.env.VITE_APP_SPOTIFY_CLIENT_SECRET;
-    // console.log('ID',client_id)
-    // console.log('SECRET', client_secret)
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: `grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}`,
-    });
-
-    const data = await response.json();
-    accessToken = data.access_token;
-    // console.log(accessToken, "in getToken");
-  };
 
   const getArtistId = async () => {
-    await getToken();
     const searchUrl = `https://api.spotify.com/v1/search?q=${artistName}&type=artist`;
     console.log('SEARCHURL',searchUrl)
     await fetch(searchUrl, {
@@ -160,6 +138,7 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
      });
   }
 
+  // TODO make this toggleable and create/remove new collection
   const heartClick = () => {
     // Update the color to red when clicked
     setHeartColor("red");
