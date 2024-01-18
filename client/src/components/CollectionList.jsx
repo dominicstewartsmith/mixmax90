@@ -4,7 +4,6 @@ import CollectionListItem from './CollectionListItem'
 const CollectionList = () => {
   return (
     <>
-      <div>CollectionList</div>
       <CollectionListItem/>
     </>
 

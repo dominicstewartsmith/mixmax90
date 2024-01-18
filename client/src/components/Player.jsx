@@ -2,7 +2,10 @@ import React from 'react'
 
 const Player = () => {
   return (
-    <div>Player</div>
+    <div className='player-container'>
+      <div className='player'>Player</div>
+    </div>
+   
   )
 }
 

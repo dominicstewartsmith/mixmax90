@@ -4,7 +4,7 @@ import Nav from './Nav';
 const Header = () => {
   return (
     <header className="titleBorder">
-      <div className="title">Dream Mixtape 💭 ▶️</div>
+      <div className="title">MIXMAX90</div>
       <Nav />
     </header>
   );

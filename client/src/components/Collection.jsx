@@ -5,7 +5,7 @@ import CollectionList from './CollectionList'
 const Collection = () => {
   return (
     <main>
-      <div>Collection</div>
+      <div className='collection-title'>Collection</div>
     
       <CollectionList/>
     </main>

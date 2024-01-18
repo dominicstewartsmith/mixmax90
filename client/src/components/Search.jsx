@@ -9,15 +9,16 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
   const [selectArtist, setSelectArtist] = useState([]);
   const [artistId, setArtistId] = useState(null);
   const [showTopTracks, setShowTopTracks] = useState(false);
+  const [heartColor, setHeartColor] = useState("#eee");
 
   useEffect(() => {
-    console.log('loaded')
     getCurrentTopTracks()
-    setTopTracks(currentTracks)
   }, [])
 
   let accessToken = null;
+  
   let artistName = search.replace(/\s+/g, "+");
+  // let artistTitle = null
   
 
   const getToken = async () => {
@@ -54,7 +55,9 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
       .then((data) => {
         console.log('in getArtistId', data)
         setSelectArtist(()=>data.artists.items)
-      })    
+      })  
+    setSearch("");
+    
   }
 
   const getRelatedArtistData = async (clickedArtistId) => {
@@ -82,6 +85,7 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
     setTopTracks(randomTracks);
     // save to DB
     addTopTrackstoDB(randomTracks)
+    setHeartColor("#eee");
   };
 
   const getArtistIds = (data) => {
@@ -156,16 +160,23 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
      });
   }
 
+  const heartClick = () => {
+    // Update the color to red when clicked
+    setHeartColor("red");
+
+    // Your additional onClick logic goes here
+    console.log("Heart clicked!");
+  };
   return (
     <div>
-
       <form className="searchForm" onSubmit={(e) => e.preventDefault()}>
         <input
           type="text"
+          size="50"
           name=""
           id="search"
           role="searchbox"
-          placeholder="search items"
+          placeholder=" Find music like..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -174,21 +185,22 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
         </button>
       </form>
 
-
       <ul className="artist-search-ul">
         {selectArtist.map((artist, index) => (
           <li
             className="artist-search-li"
             onClick={() => {
+              {
+                console.log("in selectArtist.map");
+              }
               setTopTracks([]);
-              // click creates 
+              // click creates
               getRelatedArtistData(artist.id);
               setSelectArtist([]);
               setShowTopTracks(true);
             }}
             key={index}
           >
-            {console.log(search)}
             <div className="artist-search-thumb-container">
               {artist.images[2] && (
                 <img
@@ -204,31 +216,36 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
         ))}
       </ul>
 
-
       {showTopTracks && (
         <ul className="top-tracks-ul">
           <div className="top-tracks-ul-title-container">
             <div
               className="top-tracks-ul-title-container-icon"
               onClick={() => {
+                {
+                  console.log("in reload");
+                }
                 setTopTracks([]);
                 getRelatedArtistData(artistId);
-                console.log()
                 setSelectArtist([]);
                 setShowTopTracks(true);
               }}
             >
               <TbReload />
             </div>
-            <div>TITLE</div>
-            <div className="top-tracks-ul-title-container-icon">
+            <div className="top-tracks-title">Nice work!</div>
+            <div
+              className="top-tracks-ul-title-container-icon"
+              id="heart"
+              style={{ color: heartColor }}
+              onClick={heartClick}
+            >
               <GoHeart />
             </div>
-            
           </div>
           {topTracks.map((track, index) => (
             <li className="top-tracks-li" key={index}>
-             {/* { console.log('TRACK STRUCTURE',track)} */}
+              {/* { console.log('TRACK STRUCTURE',track)} */}
               <div className="top-tracks-thumb-container">
                 {track.album.images[2] && (
                   <img
@@ -238,8 +255,10 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
                   />
                 )}
               </div>
-              Name: {track.artists[0].name}
-              Song:{track.name}
+              <div className="track-details">
+                <div className="track-details-track">{`${track.name}`}</div>
+                <div className="track-details-artist">{`${track.artists[0].name}`}</div>
+              </div>
             </li>
           ))}
         </ul>

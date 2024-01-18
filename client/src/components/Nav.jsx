@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Route, Routes } from "react-router-dom";
+// import { Link, Route, Routes } from "react-router-dom";
 import { GoHome } from "react-icons/go";
 import { VscLibrary } from "react-icons/vsc";
 import { VscAccount } from "react-icons/vsc";
@@ -8,25 +8,25 @@ const Nav = () => {
   return (
     <>
       <nav>
-        <ul>
+        <ul className="nav">
           <li className="nav-item">
-            <Link to="/">
-              <GoHome />
-              {/* <br />
+            {/* <Link to="/"> */}
+            <GoHome />
+            {/* <br />
               Home */}
-            </Link>
+            {/* </Link> */}
           </li>
-          <li>
-            <Link to="/collection">
-              <VscLibrary />
-              {/* <br />
+          <li className="nav-item">
+            {/* <Link to="/collection"> */}
+            <VscLibrary />
+            {/* <br />
               Collection */}
-            </Link>
+            {/* </Link> */}
           </li>
-          <li>
-            <Link>
+          <li className="nav-item">
+            {/* <Link> */}
             <VscAccount />
-            </Link>
+            {/* </Link> */}
           </li>
         </ul>
       </nav>

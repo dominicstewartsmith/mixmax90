@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Route, Routes } from "react-router-dom";
+// import { Route, Routes } from "react-router-dom";
 
 import './App.css'
 import Header from "./components/Header";
@@ -22,16 +22,21 @@ function App() {
         res.status(500).send("Internal Server Error");  
      }
   }
-  
+
   useEffect(() => {
     getCurrentTopTracks();
   }, [])
   
   return (
-    <>
-      <p>app working</p>
+    <main className='app-main'>
+      
       <Header />
-      <Routes>
+        <Home
+          currentTracks={currentTracks}
+          setCurrentTracks={setCurrentTracks}
+          getCurrentTopTracks={getCurrentTopTracks}
+        />
+      {/* <Routes>
         <Route
           path="/"
           element={
@@ -43,9 +48,9 @@ function App() {
           }
         />
         <Route path="/collection" element={<Collection />} />
-      </Routes>
-      <Player />
-    </>
+      </Routes> */}
+      {/* <Player /> */}
+    </main>
   );
 }
 
