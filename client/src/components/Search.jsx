@@ -12,15 +12,12 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
   const [showTopTracks, setShowTopTracks] = useState(false);
   const [heartColor, setHeartColor] = useState("#eee");
 
-  useEffect(() => {
-    getCurrentTopTracks()
-  }, [])
-
-  const accessToken = apiService.getToken();
-  
+  let accessToken = null;
   let artistName = search.replace(/\s+/g, "+");
 
+
   const getArtistId = async () => {
+    accessToken = await apiService.getToken();
     const searchUrl = `https://api.spotify.com/v1/search?q=${artistName}&type=artist`;
     console.log('SEARCHURL',searchUrl)
     await fetch(searchUrl, {
@@ -33,15 +30,15 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
       .then((data) => {
         console.log('in getArtistId', data)
         setSelectArtist(()=>data.artists.items)
-      })  
+      })
     setSearch("");
-    
+
   }
 
   const getRelatedArtistData = async (clickedArtistId) => {
     setArtistId(clickedArtistId)
     console.log('ARTISTID', artistId)
-      await getToken();
+      accessToken = await apiService.getToken();
 
     const relatedArtistsUrl = `https://api.spotify.com/v1/artists/${clickedArtistId}/related-artists`;
 
@@ -127,7 +124,7 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
 
     return result;
   }
-  async function addTopTrackstoDB(tracks) {   
+  async function addTopTrackstoDB(tracks) {
      fetch("http://localhost:3000/toptracks", {
        method: "POST",
        mode: "cors",
@@ -138,7 +135,6 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
      });
   }
 
-  // TODO make this toggleable and create/remove new collection
   const heartClick = () => {
     // Update the color to red when clicked
     setHeartColor("red");
