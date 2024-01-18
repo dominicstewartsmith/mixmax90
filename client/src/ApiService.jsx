@@ -27,11 +27,11 @@ apiService.getArtistId = async (artistName) => {
     headers: {
       Authorization: "Bearer " + `${accessToken}`,
     },
-  })
+  });
 
-  const data = await response.json()
-  return data
-}
+  const data = await response.json();
+  return data;
+};
 
 apiService.getRelatedArtists = async (artistId) => {
   const accessToken = await apiService.getToken();
@@ -46,26 +46,28 @@ apiService.getRelatedArtists = async (artistId) => {
 
   const artistData = await relatedArtistsResponse.json();
   return artistData.artists;
-}
+};
 
 apiService.getTopTracks = async (data) => {
   const accessToken = await apiService.getToken();
 
-  const topTracks = await Promise.all(data.map(async (artistId) => {
-    const url = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=GB`;
-    const response = await fetch(url, {
-      method: "Get",
-      headers: {
-        Authorization: "Bearer " + `${accessToken}`,
-      },
-    });
+  const topTracks = await Promise.all(
+    data.map(async (artistId) => {
+      const url = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=GB`;
+      const response = await fetch(url, {
+        method: "Get",
+        headers: {
+          Authorization: "Bearer " + `${accessToken}`,
+        },
+      });
 
-    const artistTopTracks = await response.json();
-    return artistTopTracks;
-  }));
+      const artistTopTracks = await response.json();
+      return artistTopTracks;
+    })
+  );
 
   return topTracks;
-}
+};
 
 apiService.addTopTrackstoDB = async (tracks) => {
   await fetch("http://localhost:3000/toptracks", {
@@ -76,6 +78,17 @@ apiService.addTopTrackstoDB = async (tracks) => {
     },
     body: JSON.stringify(tracks),
   });
-}
+};
+
+apiService.getCurrentTopTracks = async () => {
+  try {
+    const response = await fetch("http://localhost:3000/toptracks");
+    const tracks = await response.json();
+    return tracks;
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
 
 export default apiService;

@@ -5,7 +5,7 @@ import { GoHeart } from "react-icons/go";
 import { TbReload } from "react-icons/tb";
 import apiService from "../ApiService";
 
-const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrentTopTracks }) => {
+const Search = ({ search, setSearch, currentTracks, setCurrentTracks }) => {
   const [topTracks, setTopTracks] = useState([]);
   const [selectArtist, setSelectArtist] = useState([]);
   const [artistId, setArtistId] = useState(null);
@@ -33,7 +33,6 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
   }
 
   function getRandomTracksByArtist(tracks) {
-    console.log(tracks)
     const uniqueArtists = new Set();
     const result = [];
 
@@ -74,6 +73,13 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
     let artistIdItems = await apiService.getArtistId(artistName)
     setSelectArtist(artistIdItems.artists.items);
     setSearch("");
+  }
+
+  async function handleReloadClick(artistId) {
+    setTopTracks([]);
+    await apiService.getRelatedArtists(artistId);
+    setSelectArtist([]);
+    setShowTopTracks(true);
   }
 
   return (
@@ -121,15 +127,7 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
           <div className="top-tracks-ul-title-container">
             <div
               className="top-tracks-ul-title-container-icon"
-              onClick={() => {
-                {
-                  console.log("in reload");
-                }
-                setTopTracks([]);
-                getRelatedArtistData(artistId);
-                setSelectArtist([]);
-                setShowTopTracks(true);
-              }}
+              onClick={() => handleReloadClick(artistId)}
             >
               <TbReload />
             </div>

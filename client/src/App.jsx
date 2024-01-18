@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import Header from "./components/Header";
 import Home from "./components/Home";
+import apiService from './ApiService';
 import Collection from "./components/Collection";
 import Player from "./components/Player";
 
@@ -11,20 +12,23 @@ function App() {
 
   const [currentTracks, setCurrentTracks] = useState([]);
 
-  async function getCurrentTopTracks() {
-     try {
-       const response = await fetch("http://localhost:3000/toptracks");
-       const tracks = await response.json();
-       console.log('in getCurrent',tracks);
-       setCurrentTracks(tracks);      
-     } catch (error) {
-        console.error(err);
-        res.status(500).send("Internal Server Error");  
-     }
-  }
+  // async function getCurrentTopTracks() {
+  //    try {
+  //      const response = await fetch("http://localhost:3000/toptracks");
+  //      const tracks = await response.json();
+  //      setCurrentTracks(tracks);      
+  //    } catch (error) {
+  //       console.error(err);
+  //       res.status(500).send("Internal Server Error");  
+  //    }
+  // }
 
   useEffect(() => {
-    getCurrentTopTracks();
+    async function fetchData() {
+      const tracks = await apiService.getCurrentTopTracks();
+      setCurrentTracks(tracks);
+    }
+    fetchData()
   }, [])
   
   return (
@@ -34,7 +38,6 @@ function App() {
         <Home
           currentTracks={currentTracks}
           setCurrentTracks={setCurrentTracks}
-          getCurrentTopTracks={getCurrentTopTracks}
         />
       {/* <Routes>
         <Route
