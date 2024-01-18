@@ -5,7 +5,13 @@ import { GoHeart } from "react-icons/go";
 import { TbReload } from "react-icons/tb";
 import apiService from "../ApiService";
 
-const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrentTopTracks }) => {
+const Search = ({
+  search,
+  setSearch,
+  currentTracks,
+  setCurrentTracks,
+  getCurrentTopTracks,
+}) => {
   const [topTracks, setTopTracks] = useState([]);
   const [selectArtist, setSelectArtist] = useState([]);
   const [artistId, setArtistId] = useState(null);
@@ -14,15 +20,15 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
 
   let artistName = search.replace(/\s+/g, "+");
 
-  async function handleArtistClick (artistId) {
+  async function handleArtistClick(artistId) {
     setTopTracks([]); //Neccessary?
 
-    setArtistId(artistId)
+    setArtistId(artistId);
     const relatedArtists = await apiService.getRelatedArtists(artistId);
 
-    const relatedArtistIds = relatedArtists.map(artist => artist.id);
-    const topTracks = await apiService.getTopTracks(relatedArtistIds);
-    const randomTracks = getRandomTracksByArtist(topTracks);
+    const relatedArtistIds = relatedArtists.map((artist) => artist.id);
+    const allTracks = await apiService.getAllTracks(relatedArtistIds);
+    const randomTracks = getRandomTracksByArtist(allTracks);
 
     setTopTracks(randomTracks);
     await apiService.addTopTrackstoDB(randomTracks);
@@ -33,7 +39,6 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
   }
 
   function getRandomTracksByArtist(tracks) {
-    console.log(tracks)
     const uniqueArtists = new Set();
     const result = [];
 
@@ -59,10 +64,9 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
     return result;
   }
 
-
   const heartClick = () => {
     //TODO make heart toggleable
-    
+
     // Update the color to red when clicked
     setHeartColor("red");
 
@@ -71,9 +75,24 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
   };
 
   async function handleSearchClick() {
-    let artistIdItems = await apiService.getArtistId(artistName)
+    let artistIdItems = await apiService.getArtistId(artistName);
     setSelectArtist(artistIdItems.artists.items);
     setSearch("");
+  }
+
+  async function handleReloadClick() {
+    setTopTracks([]);
+    const relatedArtists = await apiService.getRelatedArtists(artistId);
+
+    const relatedArtistIds = relatedArtists.map((artist) => artist.id);
+    const allTracks = await apiService.getAllTracks(relatedArtistIds);
+    const randomTracks = getRandomTracksByArtist(allTracks);
+
+    setTopTracks(randomTracks);
+    await apiService.addTopTrackstoDB(randomTracks);
+    
+    setSelectArtist([]);
+    setShowTopTracks(true);
   }
 
   return (
@@ -98,7 +117,9 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
         {selectArtist.map((artist, index) => (
           <li
             className="artist-search-li"
-            onClick={() => {handleArtistClick(artist.id)}}
+            onClick={() => {
+              handleArtistClick(artist.id);
+            }}
             key={index}
           >
             <div className="artist-search-thumb-container">
@@ -121,15 +142,7 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
           <div className="top-tracks-ul-title-container">
             <div
               className="top-tracks-ul-title-container-icon"
-              onClick={() => {
-                {
-                  console.log("in reload");
-                }
-                setTopTracks([]);
-                getRelatedArtistData(artistId);
-                setSelectArtist([]);
-                setShowTopTracks(true);
-              }}
+              onClick={handleReloadClick}
             >
               <TbReload />
             </div>

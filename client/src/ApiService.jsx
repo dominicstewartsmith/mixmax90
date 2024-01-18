@@ -48,7 +48,7 @@ apiService.getRelatedArtists = async (artistId) => {
   return artistData.artists;
 }
 
-apiService.getTopTracks = async (data) => {
+apiService.getAllTracks = async (data) => {
   const accessToken = await apiService.getToken();
 
   const topTracks = await Promise.all(data.map(async (artistId) => {

@@ -1,0 +1,1 @@
+1. All API requests were moved to a dedicated API service
