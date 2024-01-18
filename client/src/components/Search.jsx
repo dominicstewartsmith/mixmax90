@@ -12,9 +12,7 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
   const [showTopTracks, setShowTopTracks] = useState(false);
   const [heartColor, setHeartColor] = useState("#eee");
 
-  let accessToken = null;
   let artistName = search.replace(/\s+/g, "+");
-
 
   async function handleArtistClick (artistId) {
     setTopTracks([]); //Neccessary?
@@ -27,7 +25,7 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
     const randomTracks = getRandomTracksByArtist(topTracks);
 
     setTopTracks(randomTracks);
-    addTopTrackstoDB(randomTracks) //API Service ->
+    await apiService.addTopTrackstoDB(randomTracks);
     setHeartColor("#eee");
 
     setSelectArtist([]);
@@ -60,18 +58,11 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
 
     return result;
   }
-  async function addTopTrackstoDB(tracks) {
-     fetch("http://localhost:3000/toptracks", {
-       method: "POST",
-       mode: "cors",
-       headers: {
-         "Content-Type": "application/json",
-       },
-       body: JSON.stringify(tracks),
-     });
-  }
+
 
   const heartClick = () => {
+    //TODO make heart toggleable
+    
     // Update the color to red when clicked
     setHeartColor("red");
 

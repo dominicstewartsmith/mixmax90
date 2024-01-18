@@ -67,4 +67,15 @@ apiService.getTopTracks = async (data) => {
   return topTracks;
 }
 
+apiService.addTopTrackstoDB = async (tracks) => {
+  await fetch("http://localhost:3000/toptracks", {
+    method: "POST",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(tracks),
+  });
+}
+
 export default apiService;
