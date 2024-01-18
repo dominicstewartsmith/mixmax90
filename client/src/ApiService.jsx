@@ -78,4 +78,15 @@ apiService.addTopTrackstoDB = async (tracks) => {
   });
 }
 
+apiService.getCurrentTopTracks = async () => {
+  try {
+    const response = await fetch("http://localhost:3000/toptracks");
+    const tracks = await response.json();
+    return tracks;     
+  } catch (error) {
+     console.error(error);
+     res.status(500).send("Internal Server Error");  
+  }
+}
+
 export default apiService;

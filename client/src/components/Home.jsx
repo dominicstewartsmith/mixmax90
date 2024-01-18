@@ -7,17 +7,17 @@ import Player from './Player';
 // import MixList from './MixList'
 
 
-const Home = ({topTracks, setTopTracks, getCurrentTopTracks,currentTracks}) => {
-  const [search, setSearch] = useState("");
+const Home = ({topTracks, setTopTracks, currentTracks}) => {
+  const [searchedArtist, setSearchedArtist] = useState("");
+
   return (
     <main className='home-main'>
       {/* <div>Home</div> */}
       <Search
         topTracks={topTracks}
         setTopTracks={setTopTracks}
-        search={search}
-        setSearch={setSearch}
-        getCurrentTopTracks={getCurrentTopTracks}
+        searchedArtist={searchedArtist}
+        setSearchedArtist={setSearchedArtist}
         currentTracks={currentTracks}
       />
       <Collection />

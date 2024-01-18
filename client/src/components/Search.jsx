@@ -1,16 +1,13 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BsSearchHeart } from "react-icons/bs";
 import { GoHeart } from "react-icons/go";
 import { TbReload } from "react-icons/tb";
 import apiService from "../ApiService";
 
 const Search = ({
-  search,
-  setSearch,
-  currentTracks,
-  setCurrentTracks,
-  getCurrentTopTracks,
+  searchedArtist,
+  setSearchedArtist
 }) => {
   const [topTracks, setTopTracks] = useState([]);
   const [selectArtist, setSelectArtist] = useState([]);
@@ -18,7 +15,7 @@ const Search = ({
   const [showTopTracks, setShowTopTracks] = useState(false);
   const [heartColor, setHeartColor] = useState("#eee");
 
-  let artistName = search.replace(/\s+/g, "+");
+  let artistName = searchedArtist.replace(/\s+/g, "+");
 
   async function handleArtistClick(artistId) {
     setTopTracks([]); //Neccessary?
@@ -77,7 +74,7 @@ const Search = ({
   async function handleSearchClick() {
     let artistIdItems = await apiService.getArtistId(artistName);
     setSelectArtist(artistIdItems.artists.items);
-    setSearch("");
+    setSearchedArtist("");
   }
 
   async function handleReloadClick() {
@@ -105,8 +102,8 @@ const Search = ({
           id="search"
           role="searchbox"
           placeholder=" Find music like..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={searchedArtist}
+          onChange={(e) => setSearchedArtist(e.target.value)}
         />
         <button onClick={handleSearchClick} type="submit" id="submitButton">
           <BsSearchHeart />
