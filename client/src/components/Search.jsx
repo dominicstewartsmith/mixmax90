@@ -16,71 +16,26 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
   let artistName = search.replace(/\s+/g, "+");
 
 
-  const getRelatedArtistData = async (clickedArtistId) => {
-    setArtistId(clickedArtistId)
-    console.log('ARTISTID', artistId)
-      accessToken = await apiService.getToken();
+  async function handleArtistClick (artistId) {
+    setTopTracks([]); //Neccessary?
 
-    const relatedArtistsUrl = `https://api.spotify.com/v1/artists/${clickedArtistId}/related-artists`;
+    setArtistId(artistId)
+    const relatedArtists = await apiService.getRelatedArtists(artistId);
 
-    const relatedArtistsResponse = await fetch(relatedArtistsUrl, {
-      method: "Get",
-      headers: {
-        Authorization: "Bearer " + `${accessToken}`,
-      },
-    });
+    const relatedArtistIds = relatedArtists.map(artist => artist.id);
+    const topTracks = await apiService.getTopTracks(relatedArtistIds);
+    const randomTracks = getRandomTracksByArtist(topTracks);
 
-    const artistData = await relatedArtistsResponse.json();
-
-    const artistIds = getArtistIds(artistData);
-    console.log("IDS", artistIds);
-    const tracks = await getTopTracks(artistIds);
-    console.log("TRACKS", tracks);
-    const randomTracks = getRandomTracksByArtist(tracks);
-    console.log("topTracks", randomTracks);
     setTopTracks(randomTracks);
-    // save to DB
-    addTopTrackstoDB(randomTracks)
+    addTopTrackstoDB(randomTracks) //API Service ->
     setHeartColor("#eee");
-  };
 
-  const getArtistIds = (data) => {
-    const artistIds = [];
-
-    if (data && data.artists && Array.isArray(data.artists)) {
-      data.artists.forEach((artist) => {
-        if (artist.name) {
-          artistIds.push(artist.id);
-          // artistIds.push({id:artist.id, name:artist.name});
-        }
-      });
-    }
-
-    return artistIds;
-  };
-
-  const getTopTracks = async (data) => {
-    const topTracks = [];
-
-    await Promise.all(
-      data.map(async (id) => {
-        const url = `https://api.spotify.com/v1/artists/${id}/top-tracks?market=GB`;
-        const response = await fetch(url, {
-          method: "Get",
-          headers: {
-            Authorization: "Bearer " + `${accessToken}`,
-          },
-        });
-
-        const artistTopTracks = await response.json();
-        topTracks.push(artistTopTracks);
-      })
-    );
-    // console.log('TOPTRAX', topTracks)
-    return topTracks;
-  };
+    setSelectArtist([]);
+    setShowTopTracks(true);
+  }
 
   function getRandomTracksByArtist(tracks) {
+    console.log(tracks)
     const uniqueArtists = new Set();
     const result = [];
 
@@ -124,7 +79,7 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
     console.log("Heart clicked!");
   };
 
-  async function handleClick() {
+  async function handleSearchClick() {
     let artistIdItems = await apiService.getArtistId(artistName)
     setSelectArtist(artistIdItems.artists.items);
     setSearch("");
@@ -143,7 +98,7 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button onClick={handleClick} type="submit" id="submitButton">
+        <button onClick={handleSearchClick} type="submit" id="submitButton">
           <BsSearchHeart />
         </button>
       </form>
@@ -152,16 +107,7 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
         {selectArtist.map((artist, index) => (
           <li
             className="artist-search-li"
-            onClick={() => {
-              {
-                console.log("in selectArtist.map");
-              }
-              setTopTracks([]);
-              // click creates
-              getRelatedArtistData(artist.id);
-              setSelectArtist([]);
-              setShowTopTracks(true);
-            }}
+            onClick={() => {handleArtistClick(artist.id)}}
             key={index}
           >
             <div className="artist-search-thumb-container">

@@ -33,4 +33,38 @@ apiService.getArtistId = async (artistName) => {
   return data
 }
 
+apiService.getRelatedArtists = async (artistId) => {
+  const accessToken = await apiService.getToken();
+
+  const relatedArtistsUrl = `https://api.spotify.com/v1/artists/${artistId}/related-artists`;
+  const relatedArtistsResponse = await fetch(relatedArtistsUrl, {
+    method: "Get",
+    headers: {
+      Authorization: "Bearer " + `${accessToken}`,
+    },
+  });
+
+  const artistData = await relatedArtistsResponse.json();
+  return artistData.artists;
+}
+
+apiService.getTopTracks = async (data) => {
+  const accessToken = await apiService.getToken();
+
+  const topTracks = await Promise.all(data.map(async (artistId) => {
+    const url = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=GB`;
+    const response = await fetch(url, {
+      method: "Get",
+      headers: {
+        Authorization: "Bearer " + `${accessToken}`,
+      },
+    });
+
+    const artistTopTracks = await response.json();
+    return artistTopTracks;
+  }));
+
+  return topTracks;
+}
+
 export default apiService;
