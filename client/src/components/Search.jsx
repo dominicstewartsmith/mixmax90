@@ -16,25 +16,6 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
   let artistName = search.replace(/\s+/g, "+");
 
 
-  const getArtistId = async () => {
-    accessToken = await apiService.getToken();
-    const searchUrl = `https://api.spotify.com/v1/search?q=${artistName}&type=artist`;
-    console.log('SEARCHURL',searchUrl)
-    await fetch(searchUrl, {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + `${accessToken}`,
-      },
-    })
-    .then((response) => response.json())
-      .then((data) => {
-        console.log('in getArtistId', data)
-        setSelectArtist(()=>data.artists.items)
-      })
-    setSearch("");
-
-  }
-
   const getRelatedArtistData = async (clickedArtistId) => {
     setArtistId(clickedArtistId)
     console.log('ARTISTID', artistId)
@@ -142,6 +123,13 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
     // Your additional onClick logic goes here
     console.log("Heart clicked!");
   };
+
+  async function handleClick() {
+    let artistIdItems = await apiService.getArtistId(artistName)
+    setSelectArtist(artistIdItems.artists.items);
+    setSearch("");
+  }
+
   return (
     <div>
       <form className="searchForm" onSubmit={(e) => e.preventDefault()}>
@@ -155,7 +143,7 @@ const Search = ({ search, setSearch, currentTracks, setCurrentTracks, getCurrent
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button onClick={getArtistId} type="submit" id="submitButton">
+        <button onClick={handleClick} type="submit" id="submitButton">
           <BsSearchHeart />
         </button>
       </form>

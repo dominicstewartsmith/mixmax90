@@ -19,4 +19,18 @@ apiService.getToken = async () => {
   return data.access_token;
 };
 
+apiService.getArtistId = async (artistName) => {
+  const accessToken = await apiService.getToken();
+  const searchUrl = `https://api.spotify.com/v1/search?q=${artistName}&type=artist`;
+  const response = await fetch(searchUrl, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + `${accessToken}`,
+    },
+  })
+
+  const data = await response.json()
+  return data
+}
+
 export default apiService;
