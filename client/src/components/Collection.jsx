@@ -2,12 +2,11 @@ import React from 'react'
 import Nav from './Nav'
 import CollectionList from './CollectionList'
 
-const Collection = () => {
+const Collection = ({ collectionsDB }) => {
   return (
     <main>
       <div className='collection-title'>Collection</div>
-    
-      <CollectionList/>
+      <CollectionList collectionsDB={collectionsDB}/>
     </main>
   )
 }

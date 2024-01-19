@@ -1,17 +1,16 @@
-import React from 'react'
+import React from "react";
 import { useState } from "react";
-import Search from './Search'
-import Collection from './Collection';
-import Player from './Player';
+import Search from "./Search";
+import Collection from "./Collection";
+import Player from "./Player";
 // import SuggestionList from './SuggestionList';
 // import MixList from './MixList'
 
-
-const Home = ({topTracks, setTopTracks, currentTracks}) => {
+const Home = ({ topTracks, setTopTracks, currentTracks, collectionsDB }) => {
   const [searchedArtist, setSearchedArtist] = useState("");
 
   return (
-    <main className='home-main'>
+    <main className="home-main">
       {/* <div>Home</div> */}
       <Search
         topTracks={topTracks}
@@ -20,11 +19,11 @@ const Home = ({topTracks, setTopTracks, currentTracks}) => {
         setSearchedArtist={setSearchedArtist}
         currentTracks={currentTracks}
       />
-      <Collection />
-      
+      <Collection collectionsDB={collectionsDB} />
+
       {/* <Player/> */}
     </main>
   );
 };
 
-export default Home
+export default Home;

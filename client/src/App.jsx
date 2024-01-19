@@ -10,13 +10,14 @@ import apiService from './ApiService';
 
 function App() {
   const [currentTracks, setCurrentTracks] = useState([]);
+  const [collectionsDB, setCollectionsDB] = useState([]);
 
   useEffect(() => {
     async function loadData() {
-      const tracks = await apiService.getCollections();
-      setCurrentTracks(tracks);
+      const collections = await apiService.getCollections();
+      setCollectionsDB(collections);
     }
-    // loadData();
+    loadData();
   }, [])
   
   return (
@@ -26,6 +27,7 @@ function App() {
         <Home
           currentTracks={currentTracks}
           setCurrentTracks={setCurrentTracks}
+          collectionsDB={collectionsDB}
         />
       {/* <Routes>
         <Route
