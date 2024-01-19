@@ -41,6 +41,7 @@ const Search = ({
     const randomTracks = getRandomTracksByArtist(allTracks);
 
     setTopTracks(randomTracks);
+    console.log({tracks: randomTracks})
 
 
 
@@ -103,7 +104,8 @@ const Search = ({
     const randomTracks = getRandomTracksByArtist(allTracks);
 
     setTopTracks(randomTracks);
-    await apiService.addTopTrackstoDB(randomTracks);
+    //await apiService.addTopTrackstoDB(randomTracks);
+
 
     setSelectedArtist([]);
     setShowTopTracks(true);
