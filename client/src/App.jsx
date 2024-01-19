@@ -7,28 +7,18 @@ import Home from "./components/Home";
 import apiService from './ApiService';
 import Collection from "./components/Collection";
 import Player from "./components/Player";
+import apiService from './ApiService';
 
 function App() {
-
   const [currentTracks, setCurrentTracks] = useState([]);
-
-  // async function getCurrentTopTracks() {
-  //    try {
-  //      const response = await fetch("http://localhost:3000/toptracks");
-  //      const tracks = await response.json();
-  //      setCurrentTracks(tracks);      
-  //    } catch (error) {
-  //       console.error(err);
-  //       res.status(500).send("Internal Server Error");  
-  //    }
-  // }
+  const [collectionsDB, setCollectionsDB] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
-      const tracks = await apiService.getCurrentTopTracks();
-      setCurrentTracks(tracks);
+    async function loadData() {
+      const collections = await apiService.getCollections();
+      setCollectionsDB(collections);
     }
-    fetchData()
+    loadData();
   }, [])
   
   return (
@@ -38,6 +28,7 @@ function App() {
         <Home
           currentTracks={currentTracks}
           setCurrentTracks={setCurrentTracks}
+          collectionsDB={collectionsDB}
         />
       {/* <Routes>
         <Route

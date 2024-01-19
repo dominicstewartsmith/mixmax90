@@ -1,6 +1,5 @@
 //server and db connected
-
-const dotenv = require("dotenv").config();
+require('dotenv').config();
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -21,10 +20,8 @@ app.use(cors());
 app.use(express.json());
 app.use(router);
 
-// app.get("/", (req, res) => {
-//   res.send('Hello sweetie!')
-// });
-
 app.listen(PORT, () => {
   console.log(`Express server listening on port ${PORT} 💋`);
 });
+
+module.exports = {mongoose}

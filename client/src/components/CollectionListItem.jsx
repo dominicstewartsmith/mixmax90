@@ -7,7 +7,7 @@ import React from 'react'
 const CollectionListItem = () => {
   return (
     <>
-      <ul className="collection-list-item-ul">
+      {/* <ul className="collection-list-item-ul">
         <li className="collection-list-item-li">
           <details>
             <summary>KING TUBBY #1</summary>
@@ -140,7 +140,7 @@ const CollectionListItem = () => {
         <li></li>
         <li></li>
         <li></li>
-      </ul>
+      </ul> */}
     </>
   );
 }

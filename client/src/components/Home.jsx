@@ -1,29 +1,29 @@
-import React from 'react'
+import React from "react";
 import { useState } from "react";
-import Search from './Search'
-import Collection from './Collection';
-import Player from './Player';
+import Search from "./Search";
+import Collection from "./Collection";
+import Player from "./Player";
 // import SuggestionList from './SuggestionList';
 // import MixList from './MixList'
 
+const Home = ({ topTracks, setTopTracks, currentTracks, collectionsDB }) => {
+  const [searchedArtist, setSearchedArtist] = useState("");
 
-const Home = ({topTracks, setTopTracks, currentTracks}) => {
-  const [search, setSearch] = useState("");
   return (
-    <main className='home-main'>
+    <main className="home-main">
       {/* <div>Home</div> */}
       <Search
         topTracks={topTracks}
         setTopTracks={setTopTracks}
-        search={search}
-        setSearch={setSearch}
+        searchedArtist={searchedArtist}
+        setSearchedArtist={setSearchedArtist}
         currentTracks={currentTracks}
       />
-      <Collection />
-      
+      <Collection collectionsDB={collectionsDB} />
+
       {/* <Player/> */}
     </main>
   );
 };
 
-export default Home
+export default Home;
