@@ -26,22 +26,20 @@ async function savePlaylist(req, res) {
   }
 }
 
-const controller = { savePlaylist }
+async function getCollections(req,res) {
+  try {
+    const collections = await Collection.find({});
+    res.status(200).send(collections)
+  } catch (error) {
+    console.log(error)
+    res.status(500).send(error)
+  }
+}
+
+const controller = { savePlaylist, getCollections }
 module.exports = controller;
 
-// async function addTopTracks(req, res) {
-//   try {
-//     // console.log("in post");
-//     const tracks = req.body;
-//     // console.log(tracks[0])
-//     // await TopTracks.deleteMany({})
-//     const topTracks = await TopTracks.create({tracks}) // {tracks:tracks}
-//      res.status(201).json({msg:'tracks added'});
-//   } catch (error) {
-//      console.error(error);
-//      res.status(500).send("Internal Server Error");
-//     }
-// }
+
 
 // async function getTopTracks(req, res) {
 //   try {

@@ -3,6 +3,7 @@ const router = express.Router();
 const controller = require("./controller");
 
 router.post("/savePlaylist", controller.savePlaylist);
+router.get("/getCollections", controller.getCollections);
 
 
 // router.get("/toptracks", controller.getTopTracks);
