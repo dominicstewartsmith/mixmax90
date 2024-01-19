@@ -1,9 +1,9 @@
-const MONGO_URL = process.env.MONGO_URL;
+import mongoose from 'mongoose';
 
-const mongoose = require("mongoose");
+const MONGO_URL: String = process.env.MONGO_URL;
 
 mongoose.connect(`${MONGO_URL}`).then(() => {
   console.log("DB connected 🪩");
 });
 
-module.exports = mongoose;
+export default mongoose;

@@ -1,7 +1,19 @@
-const db = require("./db");
-const Schema = db.Schema;
+import db from "./db";
+import { Schema, model, connect } from 'mongoose';
+// const Schema = db.Schema;
 
-const artistSchema = new Schema({
+interface IArtist {
+  external_urls: {
+    spotify: String,
+  },
+  href: String,
+  id: String,
+  name: String,
+  type: String,
+  uri: String,
+}
+
+const artistSchema = new Schema<IArtist>({
   external_urls: {
     spotify: String,
   },
@@ -12,11 +24,35 @@ const artistSchema = new Schema({
   uri: String,
 });
 
-const imageSchema = new Schema({
+interface IImage {
+  height: Number,
+  url: String,
+  width: Number,
+}
+
+const imageSchema = new Schema<IImage>({
   height: Number,
   url: String,
   width: Number,
 });
+
+interface IAlbum {
+  album_type: String,
+  artists: [typeof artistSchema],
+  external_urls: {
+    spotify: String,
+  },
+  href: String,
+  id: String,
+  images: [typeof imageSchema],
+  is_playable: Boolean,
+  name: String,
+  release_date: String,
+  release_date_precision: String,
+  total_tracks: Number,
+  type: String,
+  uri: String,
+}
 
 const albumSchema = new Schema({
   album_type: String,
