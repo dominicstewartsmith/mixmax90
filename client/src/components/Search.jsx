@@ -5,30 +5,14 @@ import { GoHeart } from "react-icons/go";
 import { TbReload } from "react-icons/tb";
 import apiService from "../ApiService";
 
-const Search = ({
-  searchedArtist,
-  setSearchedArtist
-}) => {
+const Search = ({ searchedArtist, setSearchedArtist }) => {
   const [topTracks, setTopTracks] = useState([]);
   const [selectedArtist, setSelectedArtist] = useState([]);
   const [artistId, setArtistId] = useState(null);
   const [showTopTracks, setShowTopTracks] = useState(false);
   const [heartColor, setHeartColor] = useState("#eee");
 
-
   let artistName = searchedArtist.replace(/\s+/g, "+");
-
-  // function generateCollectionObject(tracks) {
-  //   let collection = {
-  //     artistId,
-  //     collections: [
-  //       {
-  //         name: '',
-  //         songs: tracks
-  //       }
-  //     ]
-  //   }
-  // }
 
   async function handleArtistClick(artistId) {
     setTopTracks([]); //Neccessary?
@@ -41,11 +25,9 @@ const Search = ({
     const randomTracks = getRandomTracksByArtist(allTracks);
 
     setTopTracks(randomTracks);
-    console.log({tracks: randomTracks})
+    console.log({ tracks: randomTracks });
 
-
-
-    // await apiService.addTopTrackstoDB(randomTracks);
+    await apiService.savePlaylist(randomTracks);
     setHeartColor("#eee"); //Reset heart colour
 
     setSelectedArtist([]);
@@ -104,8 +86,7 @@ const Search = ({
     const randomTracks = getRandomTracksByArtist(allTracks);
 
     setTopTracks(randomTracks);
-    //await apiService.addTopTrackstoDB(randomTracks);
-
+    await apiService.savePlaylist(randomTracks);
 
     setSelectedArtist([]);
     setShowTopTracks(true);

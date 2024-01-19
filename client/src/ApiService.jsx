@@ -67,8 +67,8 @@ apiService.getAllTracks = async (data) => {
   return topTracks;
 }
 
-apiService.addTopTrackstoDB = async (tracks) => {
-  await fetch("http://localhost:3000/toptracks", {
+apiService.savePlaylist = async (tracks) => {
+  await fetch("http://localhost:3000/savePlaylist", {
     method: "POST",
     mode: "cors",
     headers: {
@@ -78,9 +78,9 @@ apiService.addTopTrackstoDB = async (tracks) => {
   });
 }
 
-apiService.getCurrentTopTracks = async () => {
+apiService.getCollections = async () => {
   try {
-    const response = await fetch("http://localhost:3000/toptracks");
+    const response = await fetch("http://localhost:3000/getCollections");
     const tracks = await response.json();
     return tracks;     
   } catch (error) {

@@ -41,22 +41,7 @@ module.exports = controller;
 
 
 
-// async function getTopTracks(req, res) {
-//   try {
-//     console.log("in get");
-//     // const tracks = res.body;
 
-//     // const newTopTracks = await TopTracks.find({ tracks }) // {tracks:tracks}
-//     const newTopTracks = await TopTracks.find({ }) // {tracks:tracks}
-//     res.send(newTopTracks)
-//     console.log('in getTop',newTopTracks)
-//     res.status(201)
-//     // res.status(201).json({msg:'tracks added'});
-//   } catch (error) {
-//      console.error(error);
-//      res.status(500).send("Internal Server Error");
-//     }
-//   }
 
 //   async function reloadTopTracks() {
 //     try {

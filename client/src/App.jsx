@@ -13,7 +13,7 @@ function App() {
 
   useEffect(() => {
     async function loadData() {
-      const tracks = await apiService.getCurrentTopTracks();
+      const tracks = await apiService.getCollections();
       setCurrentTracks(tracks);
     }
     // loadData();
