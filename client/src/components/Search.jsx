@@ -10,12 +10,25 @@ const Search = ({
   setSearchedArtist
 }) => {
   const [topTracks, setTopTracks] = useState([]);
-  const [selectArtist, setSelectArtist] = useState([]);
+  const [selectedArtist, setSelectedArtist] = useState([]);
   const [artistId, setArtistId] = useState(null);
   const [showTopTracks, setShowTopTracks] = useState(false);
   const [heartColor, setHeartColor] = useState("#eee");
 
+
   let artistName = searchedArtist.replace(/\s+/g, "+");
+
+  // function generateCollectionObject(tracks) {
+  //   let collection = {
+  //     artistId,
+  //     collections: [
+  //       {
+  //         name: '',
+  //         songs: tracks
+  //       }
+  //     ]
+  //   }
+  // }
 
   async function handleArtistClick(artistId) {
     setTopTracks([]); //Neccessary?
@@ -28,10 +41,13 @@ const Search = ({
     const randomTracks = getRandomTracksByArtist(allTracks);
 
     setTopTracks(randomTracks);
-    await apiService.addTopTrackstoDB(randomTracks);
-    setHeartColor("#eee");
 
-    setSelectArtist([]);
+
+
+    // await apiService.addTopTrackstoDB(randomTracks);
+    setHeartColor("#eee"); //Reset heart colour
+
+    setSelectedArtist([]);
     setShowTopTracks(true);
   }
 
@@ -63,6 +79,7 @@ const Search = ({
 
   const heartClick = () => {
     //TODO make heart toggleable
+    //TODO make heart add the songlist to the collection
 
     // Update the color to red when clicked
     setHeartColor("red");
@@ -73,7 +90,7 @@ const Search = ({
 
   async function handleSearchClick() {
     let artistIdItems = await apiService.getArtistId(artistName);
-    setSelectArtist(artistIdItems.artists.items);
+    setSelectedArtist(artistIdItems.artists.items);
     setSearchedArtist("");
   }
 
@@ -87,8 +104,8 @@ const Search = ({
 
     setTopTracks(randomTracks);
     await apiService.addTopTrackstoDB(randomTracks);
-    
-    setSelectArtist([]);
+
+    setSelectedArtist([]);
     setShowTopTracks(true);
   }
 
@@ -111,7 +128,7 @@ const Search = ({
       </form>
 
       <ul className="artist-search-ul">
-        {selectArtist.map((artist, index) => (
+        {selectedArtist.map((artist, index) => (
           <li
             className="artist-search-li"
             onClick={() => {

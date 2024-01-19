@@ -5,20 +5,20 @@ async function addTopTracks(req, res) {
     // console.log("in post");
     const tracks = req.body;
     // console.log(tracks[0])
-    await TopTracks.deleteMany({})
+    // await TopTracks.deleteMany({})
     const topTracks = await TopTracks.create({tracks}) // {tracks:tracks}
      res.status(201).json({msg:'tracks added'});
   } catch (error) {
      console.error(error);
      res.status(500).send("Internal Server Error");
     }
-}  
-  
+}
+
 async function getTopTracks(req, res) {
   try {
     console.log("in get");
     // const tracks = res.body;
-    
+
     // const newTopTracks = await TopTracks.find({ tracks }) // {tracks:tracks}
     const newTopTracks = await TopTracks.find({ }) // {tracks:tracks}
     res.send(newTopTracks)
@@ -29,14 +29,14 @@ async function getTopTracks(req, res) {
      console.error(error);
      res.status(500).send("Internal Server Error");
     }
-  }  
-  
+  }
+
   async function reloadTopTracks() {
     try {
       //clicking 'reload' overwrites current mix collection
     } catch (error) {
     console.error(err);
-    res.status(500).send("Internal Server Error");    
+    res.status(500).send("Internal Server Error");
   }
   }
 
@@ -87,4 +87,4 @@ module.exports = { addTopTracks, getTopTracks, addToCollection, deleteItem, upda
 
 // search button adds mixModel - persist on refresh
 //reload button updates current mixmodel - persist on refresh
-// heart 
+// heart
