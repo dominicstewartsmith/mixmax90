@@ -1,10 +1,10 @@
 import {Router} from "express";
+import {savePlaylist, getCollections} from "./controller";
 
 const serverRouter: Router = Router();
-const controller = require("./controller");
 
-serverRouter.post("/savePlaylist", controller.savePlaylist);
-serverRouter.get("/getCollections", controller.getCollections);
+serverRouter.post("/savePlaylist", savePlaylist);
+serverRouter.get("/getCollections", getCollections);
 
 
 export default serverRouter;

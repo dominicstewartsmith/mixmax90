@@ -1,22 +1,22 @@
-const CollectionModel = require("./models");
+import {Collection, ICollection} from "./models";
+import {Request, Response} from "express";
 
-async function savePlaylist(req, res) {
+async function savePlaylist(req: Request, res: Response) {
   try {
-    const data = req.body;
-    console.log(data)
+    const data: ICollection = req.body;
+
     //check if there is already an artist by the given name,
-    const result = await CollectionModel.findOne({ artistName: data.artistName })
-    console.log(result)
+    const result: ICollection | null = await Collection.findOne({ artistName: data.artistName })
 
     if (result) {
       // if there is, push the tracks to the playlist array
-      const update = await CollectionModel.updateOne(
+      await Collection.updateOne(
         { artistName: data.artistName },
         { $push: { "playlists": data.playlists } }
       )
     } else {
       // if not, create a new CollectionModel for that artist
-      await CollectionModel.create(data)
+      await Collection.create(data)
     }
 
     res.status(201).send('Created')
@@ -26,9 +26,9 @@ async function savePlaylist(req, res) {
     }
   }
 
-  async function getCollections(req, res) {
+  async function getCollections(req: Request, res: Response) {
     try {
-      const collections = await CollectionModel.find({});
+      const collections: ICollection[] = await Collection.find({});
       res.status(200).send(collections)
     } catch (error) {
       console.log(error)
@@ -36,5 +36,4 @@ async function savePlaylist(req, res) {
     }
   }
 
-  const controllers = { savePlaylist, getCollections }
-  module.exports = controllers;
+  export { savePlaylist, getCollections };

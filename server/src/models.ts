@@ -1,16 +1,15 @@
 import db from "./db";
-import { Schema, model, connect } from 'mongoose';
-// const Schema = db.Schema;
+const Schema = db.Schema;
 
 interface IArtist {
   external_urls: {
-    spotify: String,
-  },
-  href: String,
-  id: String,
-  name: String,
-  type: String,
-  uri: String,
+    spotify: String;
+  };
+  href: String;
+  id: String;
+  name: String;
+  type: String;
+  uri: String;
 }
 
 const artistSchema = new Schema<IArtist>({
@@ -25,9 +24,9 @@ const artistSchema = new Schema<IArtist>({
 });
 
 interface IImage {
-  height: Number,
-  url: String,
-  width: Number,
+  height: Number;
+  url: String;
+  width: Number;
 }
 
 const imageSchema = new Schema<IImage>({
@@ -37,24 +36,24 @@ const imageSchema = new Schema<IImage>({
 });
 
 interface IAlbum {
-  album_type: String,
-  artists: [typeof artistSchema],
+  album_type: String;
+  artists: [typeof artistSchema];
   external_urls: {
-    spotify: String,
-  },
-  href: String,
-  id: String,
-  images: [typeof imageSchema],
-  is_playable: Boolean,
-  name: String,
-  release_date: String,
-  release_date_precision: String,
-  total_tracks: Number,
-  type: String,
-  uri: String,
+    spotify: String;
+  };
+  href: String;
+  id: String;
+  images: [typeof imageSchema];
+  is_playable: Boolean;
+  name: String;
+  release_date: String;
+  release_date_precision: String;
+  total_tracks: Number;
+  type: String;
+  uri: String;
 }
 
-const albumSchema = new Schema({
+const albumSchema = new Schema<IAlbum>({
   album_type: String,
   artists: [artistSchema],
   external_urls: {
@@ -70,9 +69,33 @@ const albumSchema = new Schema({
   total_tracks: Number,
   type: String,
   uri: String,
-})
+});
 
-const trackSchema = new Schema({
+interface ITrack {
+  album: { albumSchema: IAlbum };
+  artists: [typeof artistSchema];
+  disc_number: Number;
+  duration_ms: Number;
+  explicit: Boolean;
+  external_ids: {
+    isrc: String;
+  };
+  external_urls: {
+    spotify: String;
+  };
+  href: String;
+  id: String;
+  is_local: Boolean;
+  is_playable: Boolean;
+  name: String;
+  popularity: Number;
+  preview_url: String;
+  track_number: Number;
+  type: String;
+  uri: String;
+}
+
+const trackSchema = new Schema<ITrack>({
   album: { albumSchema },
   artists: [artistSchema],
   disc_number: Number,
@@ -94,18 +117,26 @@ const trackSchema = new Schema({
   track_number: Number,
   type: String,
   uri: String,
-})
+});
 
-const topTracksSchema = new Schema({
-  tracks: [trackSchema]
-})
+interface ITopTracks {
+  tracks: [typeof trackSchema];
+}
 
-const collectionSchema = new Schema({
+const topTracksSchema = new Schema<ITopTracks>({
+  tracks: [trackSchema],
+});
+
+interface ICollection {
+  artistName: String;
+  playlists: [typeof topTracksSchema];
+}
+
+const collectionSchema = new Schema<ICollection>({
   artistName: String,
-  playlists: [topTracksSchema]
-})
+  playlists: [topTracksSchema],
+});
 
 const Collection = db.model("Collection", collectionSchema);
 
-
-module.exports = Collection;
+export { Collection, ICollection };
