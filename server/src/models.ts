@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const db = require("./db");
+const Schema = db.Schema;
 
 const artistSchema = new Schema({
   external_urls: {
@@ -69,7 +69,7 @@ const collectionSchema = new Schema({
   playlists: [topTracksSchema]
 })
 
-const Collection = mongoose.model("Collection", collectionSchema);
+const Collection = db.model("Collection", collectionSchema);
 
 
 module.exports = Collection;

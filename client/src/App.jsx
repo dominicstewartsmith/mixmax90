@@ -7,7 +7,6 @@ import Home from "./components/Home";
 import apiService from './ApiService';
 import Collection from "./components/Collection";
 import Player from "./components/Player";
-import apiService from './ApiService';
 
 function App() {
   const [currentTracks, setCurrentTracks] = useState([]);
@@ -20,10 +19,10 @@ function App() {
     }
     loadData();
   }, [])
-  
+
   return (
     <main className='app-main'>
-      
+
       <Header />
         <Home
           currentTracks={currentTracks}
