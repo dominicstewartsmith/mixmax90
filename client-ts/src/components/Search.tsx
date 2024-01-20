@@ -106,6 +106,7 @@ const Search = ({
 
   async function handleReloadClick() {
     setTopTracks([]);
+    setHeartColor("#eee"); //Reset heart colour
     const relatedArtists: IArtist[] = await apiService.getRelatedArtists(
       artistId
     );
