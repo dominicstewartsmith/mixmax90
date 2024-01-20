@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { ICollection, ITopTracks, ITrack } from "../../types";
 
 interface CollectionListComponents {
-  collectionsDB: ICollection[]
+  collectionsDB: ICollection[];
 }
 
 const CollectionList = ({ collectionsDB }: CollectionListComponents) => {
-  const [displayedSongs, setDisplayedSongs] = useState<React.ReactElement[]>([]);
-  const [displayedPlaylists, setDisplayedPlaylists] = useState<React.ReactElement[]>([]);
+  const [displayedSongs, setDisplayedSongs] = useState<React.ReactElement[]>(
+    []
+  );
+  const [displayedPlaylists, setDisplayedPlaylists] = useState<
+    React.ReactElement[]
+  >([]);
 
   //TODO Double check these types
   let artistList: React.ReactElement[] = [];
@@ -16,9 +20,10 @@ const CollectionList = ({ collectionsDB }: CollectionListComponents) => {
 
   // buttons for artist
   if (collectionsDB.length > 0) {
-    artistList = collectionsDB.map((artist: ICollection) => {
+    artistList = collectionsDB.map((artist: ICollection, index: number) => {
       return (
         <div
+          key={index}
           className="artist-search-li"
           onClick={() => handleArtistClick(artist)}
         >
@@ -30,23 +35,25 @@ const CollectionList = ({ collectionsDB }: CollectionListComponents) => {
 
   // buttons for playlists
   function handleArtistClick(artist: ICollection) {
-    let artistPlaylists: React.ReactElement[] = artist.playlists.map((playlist: ITopTracks, index: number) => {
-      return (
-        <details onClick={() => handlePlaylistClick(playlist)}>
-          <summary>{index + 1}</summary>
-        </details>
-      );
-    });
+    let artistPlaylists: React.ReactElement[] = artist.playlists.map(
+      (playlist: ITopTracks, index: number) => {
+        return (
+          <details key={index} onClick={() => handlePlaylistClick(playlist)}>
+            <summary>{index + 1}</summary>
+          </details>
+        );
+      }
+    );
     setDisplayedPlaylists(artistPlaylists);
   }
 
   //display the songs
   function handlePlaylistClick(playlist: ITopTracks) {
-    let playlistSongs: React.ReactElement[] = playlist.tracks.map((song: ITrack) => {
-      return (
-        <p>{song.name}</p>
-      )
-    });
+    let playlistSongs: React.ReactElement[] = playlist.tracks.map(
+      (song: ITrack, index: number) => {
+        return <p key={index}>{song.name}</p>;
+      }
+    );
     setDisplayedSongs(playlistSongs);
   }
 

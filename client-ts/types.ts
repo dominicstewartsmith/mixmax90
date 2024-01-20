@@ -64,7 +64,7 @@ interface IAlbum {
 }
 
 interface ITrack {
-  album: { albumSchema: IAlbum };
+  album: IAlbum;
   artists: IArtist[];
   disc_number: number;
   duration_ms: number;

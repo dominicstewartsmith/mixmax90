@@ -1,44 +1,55 @@
-import React, { SetStateAction, Dispatch } from "react";
+import { SetStateAction, Dispatch } from "react";
 import { useState } from "react";
 import { BsSearchHeart } from "react-icons/bs";
 import { GoHeart } from "react-icons/go";
 import { TbReload } from "react-icons/tb";
 import apiService from "../ApiService";
-import { IArtist, ICollection, ISearchResult, ISearchResults, ITopTracks, ITrack } from "../../types";
+import {
+  IArtist,
+  ICollection,
+  ISearchResult,
+  ISearchResults,
+  ITopTracks,
+  ITrack,
+} from "../../types";
 
 interface SearchComponentProps {
-  searchedArtist: string,
-  setSearchedArtist: Dispatch<SetStateAction<string>>
+  searchedArtist: string;
+  setSearchedArtist: Dispatch<SetStateAction<string>>;
 }
 
-const Search = ({ searchedArtist, setSearchedArtist }: SearchComponentProps) => {
+const Search = ({
+  searchedArtist,
+  setSearchedArtist,
+}: SearchComponentProps) => {
   const [topTracks, setTopTracks] = useState<ITrack[]>([]);
   const [searchResults, setSearchResults] = useState<ISearchResult[]>([]);
   const [artistId, setArtistId] = useState<string>("");
   const [showTopTracks, setShowTopTracks] = useState<boolean>(false);
+  const [heartClicked, setHeartClicked] = useState<boolean>(false);
   const [heartColor, setHeartColor] = useState<string>("#eee");
+  const [artistNameForDB, setArtistNameForDB] = useState<string>("");
 
   let artistName: string = searchedArtist.replace(/\s+/g, "+");
 
-  async function handleArtistClick(artistId: string) {
+  async function handleArtistClick(artistId: string, name: string) {
     setTopTracks([]); //Neccessary?
+    setArtistNameForDB(name);
 
     setArtistId(artistId);
-    const relatedArtists: IArtist[] = await apiService.getRelatedArtists(artistId);
-    const relatedArtistIds: string[] = relatedArtists.map((artist: IArtist) => artist.id);
-    const allTracks: ITopTracks[] = await apiService.getAllTracks(relatedArtistIds);
+    const relatedArtists: IArtist[] = await apiService.getRelatedArtists(
+      artistId
+    );
+    const relatedArtistIds: string[] = relatedArtists.map(
+      (artist: IArtist) => artist.id
+    );
+    const allTracks: ITopTracks[] = await apiService.getAllTracks(
+      relatedArtistIds
+    );
     const randomTracks: ITrack[] = getRandomTracksByArtist(allTracks);
 
     setTopTracks(randomTracks);
 
-    let payload: ICollection = {
-      artistName: artistName,
-      playlists: [
-        { tracks: randomTracks }
-      ]
-    }
-
-    await apiService.savePlaylist(payload);
     setHeartColor("#eee"); //Reset heart colour
 
     setSearchResults([]);
@@ -71,41 +82,45 @@ const Search = ({ searchedArtist, setSearchedArtist }: SearchComponentProps) => 
     return result;
   }
 
-  const heartClick = () => {
+  const heartClick = async () => {
     //TODO make heart toggleable
     //TODO make heart add the songlist to the collection
-
-    // Update the color to red when clicked
+    setHeartClicked(true);
     setHeartColor("red");
 
-    // Your additional onClick logic goes here
+    let payload: ICollection = {
+      artistName: artistNameForDB,
+      playlists: [{ tracks: topTracks }],
+    };
+
+    await apiService.savePlaylist(payload);
   };
 
   async function handleSearchClick() {
-    let artistIdItems: ISearchResults = await apiService.getArtistId(artistName);
+    let artistIdItems: ISearchResults = await apiService.getArtistId(
+      artistName
+    );
     setSearchResults(artistIdItems.artists.items);
     setSearchedArtist("");
   }
 
   async function handleReloadClick() {
     setTopTracks([]);
-    const relatedArtists = await apiService.getRelatedArtists(artistId);
+    const relatedArtists: IArtist[] = await apiService.getRelatedArtists(
+      artistId
+    );
 
-    const relatedArtistIds = relatedArtists.map((artist) => artist.id);
-    const allTracks = await apiService.getAllTracks(relatedArtistIds);
-    const randomTracks = getRandomTracksByArtist(allTracks);
+    const relatedArtistIds: string[] = relatedArtists.map(
+      (artist) => artist.id
+    );
+    const allTracks: ITopTracks[] = await apiService.getAllTracks(
+      relatedArtistIds
+    );
+    const randomTracks: ITrack[] = getRandomTracksByArtist(allTracks);
 
     setTopTracks(randomTracks);
-    await apiService.savePlaylist(randomTracks);
 
     setSearchResults([]);
-    setShowTopTracks(true);
-  }
-
-  async function handleReloadClick(artistId) {
-    setTopTracks([]);
-    await apiService.getRelatedArtists(artistId);
-    setSelectArtist([]);
     setShowTopTracks(true);
   }
 
@@ -114,7 +129,7 @@ const Search = ({ searchedArtist, setSearchedArtist }: SearchComponentProps) => 
       <form className="searchForm" onSubmit={(e) => e.preventDefault()}>
         <input
           type="text"
-          size="50"
+          // size="50" // Perhaps changes size ???
           name=""
           id="search"
           role="searchbox"
@@ -132,7 +147,7 @@ const Search = ({ searchedArtist, setSearchedArtist }: SearchComponentProps) => 
           <li
             className="artist-search-li"
             onClick={() => {
-              handleArtistClick(artist.id);
+              handleArtistClick(artist.id, artist.name);
             }}
             key={index}
           >
@@ -146,7 +161,6 @@ const Search = ({ searchedArtist, setSearchedArtist }: SearchComponentProps) => 
               )}
             </div>
             <div className="artist-search-name">{artist.name}</div>
-            {/* Id: {artist.id} */}
           </li>
         ))}
       </ul>
@@ -172,7 +186,6 @@ const Search = ({ searchedArtist, setSearchedArtist }: SearchComponentProps) => 
           </div>
           {topTracks.map((track, index) => (
             <li className="top-tracks-li" key={index}>
-              {/* { console.log('TRACK STRUCTURE',track)} */}
               <div className="top-tracks-thumb-container">
                 {track.album.images[2] && (
                   <img

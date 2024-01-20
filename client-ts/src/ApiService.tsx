@@ -74,6 +74,16 @@ const apiService = {
       body: JSON.stringify(tracks),
     });
   },
+  deletePlaylist: async (id: string) => {
+    await fetch("http://localhost:3000/deletePlaylist", {
+      method: "DELETE",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(id),
+    })
+  },
   getCollections: async () => {
     try {
       const response = await fetch("http://localhost:3000/getCollections");
