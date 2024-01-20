@@ -1,41 +1,53 @@
-import React from "react";
+import React, { SetStateAction, Dispatch } from "react";
 import { useState } from "react";
 import { BsSearchHeart } from "react-icons/bs";
 import { GoHeart } from "react-icons/go";
 import { TbReload } from "react-icons/tb";
 import apiService from "../ApiService";
+import { IArtist, ICollection, ISearchResult, ISearchResults, ITopTracks, ITrack } from "../../types";
 
-const Search = ({ searchedArtist, setSearchedArtist }) => {
-  const [topTracks, setTopTracks] = useState([]);
-  const [selectedArtist, setSelectedArtist] = useState([]);
-  const [artistId, setArtistId] = useState(null);
-  const [showTopTracks, setShowTopTracks] = useState(false);
-  const [heartColor, setHeartColor] = useState("#eee");
+interface SearchComponentProps {
+  searchedArtist: string,
+  setSearchedArtist: Dispatch<SetStateAction<string>>
+}
 
-  let artistName = searchedArtist.replace(/\s+/g, "+");
+const Search = ({ searchedArtist, setSearchedArtist }: SearchComponentProps) => {
+  const [topTracks, setTopTracks] = useState<ITrack[]>([]);
+  const [searchResults, setSearchResults] = useState<ISearchResult[]>([]);
+  const [artistId, setArtistId] = useState<string>("");
+  const [showTopTracks, setShowTopTracks] = useState<boolean>(false);
+  const [heartColor, setHeartColor] = useState<string>("#eee");
 
-  async function handleArtistClick(artistId) {
+  let artistName: string = searchedArtist.replace(/\s+/g, "+");
+
+  async function handleArtistClick(artistId: string) {
     setTopTracks([]); //Neccessary?
 
     setArtistId(artistId);
-    const relatedArtists = await apiService.getRelatedArtists(artistId);
-
-    const relatedArtistIds = relatedArtists.map((artist) => artist.id);
-    const allTracks = await apiService.getAllTracks(relatedArtistIds);
-    const randomTracks = getRandomTracksByArtist(allTracks);
+    const relatedArtists: IArtist[] = await apiService.getRelatedArtists(artistId);
+    const relatedArtistIds: string[] = relatedArtists.map((artist: IArtist) => artist.id);
+    const allTracks: ITopTracks[] = await apiService.getAllTracks(relatedArtistIds);
+    const randomTracks: ITrack[] = getRandomTracksByArtist(allTracks);
 
     setTopTracks(randomTracks);
 
-    await apiService.savePlaylist(randomTracks);
+    let payload: ICollection = {
+      artistName: artistName,
+      playlists: [
+        { tracks: randomTracks }
+      ]
+    }
+
+    await apiService.savePlaylist(payload);
     setHeartColor("#eee"); //Reset heart colour
 
-    setSelectedArtist([]);
+    setSearchResults([]);
     setShowTopTracks(true);
   }
 
-  function getRandomTracksByArtist(tracks) {
+  function getRandomTracksByArtist(tracks: ITopTracks[]) {
     const uniqueArtists = new Set();
-    const result = [];
+    const result: ITrack[] = [];
 
     tracks.forEach((album) => {
       album.tracks.forEach((track) => {
@@ -67,16 +79,11 @@ const Search = ({ searchedArtist, setSearchedArtist }) => {
     setHeartColor("red");
 
     // Your additional onClick logic goes here
-    console.log("Heart clicked!");
   };
 
   async function handleSearchClick() {
-    let artistIdItems = await apiService.getArtistId(artistName);
-
-    console.log('1', artistIdItems)
-    console.log('2', artistIdItems.artists.items)
-
-    setSelectedArtist(artistIdItems.artists.items);
+    let artistIdItems: ISearchResults = await apiService.getArtistId(artistName);
+    setSearchResults(artistIdItems.artists.items);
     setSearchedArtist("");
   }
 
@@ -91,7 +98,7 @@ const Search = ({ searchedArtist, setSearchedArtist }) => {
     setTopTracks(randomTracks);
     await apiService.savePlaylist(randomTracks);
 
-    setSelectedArtist([]);
+    setSearchResults([]);
     setShowTopTracks(true);
   }
 
@@ -121,7 +128,7 @@ const Search = ({ searchedArtist, setSearchedArtist }) => {
       </form>
 
       <ul className="artist-search-ul">
-        {selectedArtist.map((artist, index) => (
+        {searchResults.map((artist, index) => (
           <li
             className="artist-search-li"
             onClick={() => {

@@ -1,4 +1,4 @@
-import { ITopTracks } from "../types.ts";
+import { ICollection } from "../types.ts";
 
 const apiService = {
   getToken: async () => {
@@ -64,7 +64,7 @@ const apiService = {
 
     return topTracks;
   },
-  savePlaylist: async (tracks: ITopTracks) => {
+  savePlaylist: async (tracks: ICollection) => {
     await fetch("http://localhost:3000/savePlaylist", {
       method: "POST",
       mode: "cors",

@@ -8,7 +8,7 @@ interface homeComponentProp {
 }
 
 const Home = ({ collectionsDB }: homeComponentProp) => {
-  const [searchedArtist, setSearchedArtist] = useState("");
+  const [searchedArtist, setSearchedArtist] = useState<string>("");
 
   return (
     <main className="home-main">
