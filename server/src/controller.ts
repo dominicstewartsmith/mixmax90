@@ -1,6 +1,8 @@
 import { Collection, ICollection } from "./models";
 import { Request, Response } from "express";
 
+//TODO Error handling & send correct success/failure HTTP response codes
+
 async function savePlaylist(req: Request, res: Response) {
   try {
     const data: ICollection = req.body;

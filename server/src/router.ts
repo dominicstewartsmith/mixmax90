@@ -7,5 +7,4 @@ serverRouter.post("/savePlaylist", savePlaylist);
 serverRouter.get("/getCollections", getCollections);
 serverRouter.delete("/deletePlaylist", deletePlaylist)
 
-
 export default serverRouter;

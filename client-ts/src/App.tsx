@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import Home from "./components/Home";
@@ -7,30 +7,35 @@ import { ICollection } from "../types";
 
 function App() {
   const [collectionsDB, setCollectionsDB] = useState<ICollection[]>([]);
-  const [loadingError, setLoadingError] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true);
+  const [loadingError, setLoadingError] = useState<boolean>(false);
+
+  const loadData = async () => {
+    try {
+      const collections = await apiService.getCollections();
+      setCollectionsDB(collections);
+      setLoading(false);
+    } catch (error) {
+      setLoadingError(true);
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    async function loadData() {
-      try {
-        const collections = await apiService.getCollections();
-        setCollectionsDB(collections);
-      } catch (error) {
-        setLoadingError(true)
-        console.log(error)
-      }
-    }
     loadData();
   }, []);
 
-  if (loadingError) return <h1>Error connecting to the server 😔</h1>
+  if (loadingError) return <h2>Error connecting to the server 😔</h2>;
 
   return (
-    <main className="app-main">
-      <Header />
-      <Home
-        collectionsDB={collectionsDB}
-      />
-    </main>
+    <>
+      {!loading &&
+        <main className="app-main">
+          <Header />
+          <Home collectionsDB={collectionsDB} />
+        </main>
+      }
+    </>
   );
 }
 

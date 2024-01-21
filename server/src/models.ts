@@ -1,5 +1,5 @@
-import db from "./db";
-const Schema = db.Schema;
+import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
 
 interface IArtist {
   external_urls: {
@@ -137,6 +137,6 @@ const collectionSchema = new Schema<ICollection>({
   playlists: [topTracksSchema],
 });
 
-const Collection = db.model("Collection", collectionSchema);
+const Collection = mongoose.model("Collection", collectionSchema);
 
-export { Collection, ICollection };
+export { Collection, ICollection, mongoose };

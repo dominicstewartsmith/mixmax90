@@ -1,4 +1,3 @@
-import { SetStateAction, Dispatch } from "react";
 import { useState } from "react";
 import { BsSearchHeart } from "react-icons/bs";
 import { GoHeart } from "react-icons/go";
@@ -13,15 +12,8 @@ import {
   ITrack,
 } from "../../types";
 
-interface SearchComponentProps {
-  searchedArtist: string;
-  setSearchedArtist: Dispatch<SetStateAction<string>>;
-}
-
-const Search = ({
-  searchedArtist,
-  setSearchedArtist,
-}: SearchComponentProps) => {
+const Search = () => {
+  const [searchedArtist, setSearchedArtist] = useState<string>("");
   const [topTracks, setTopTracks] = useState<ITrack[]>([]);
   const [searchResults, setSearchResults] = useState<ISearchResult[]>([]);
   const [artistId, setArtistId] = useState<string>("");
@@ -49,14 +41,13 @@ const Search = ({
     const randomTracks: ITrack[] = getRandomTracksByArtist(allTracks);
 
     setTopTracks(randomTracks);
-
     setHeartColor("#eee"); //Reset heart colour
-
     setSearchResults([]);
     setShowTopTracks(true);
   }
 
   function getRandomTracksByArtist(tracks: ITopTracks[]) {
+    //TODO Ensure this function does not include duplicate track names in the final result.
     const uniqueArtists = new Set();
     const result: ITrack[] = [];
 
@@ -120,7 +111,6 @@ const Search = ({
     const randomTracks: ITrack[] = getRandomTracksByArtist(allTracks);
 
     setTopTracks(randomTracks);
-
     setSearchResults([]);
     setShowTopTracks(true);
   }
