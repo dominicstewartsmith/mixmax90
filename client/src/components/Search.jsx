@@ -60,8 +60,6 @@ const Search = ({ searchedArtist, setSearchedArtist }) => {
   }
 
   const heartClick = () => {
-    //TODO make heart toggleable
-    //TODO make heart add the songlist to the collection
 
     // Update the color to red when clicked
     setHeartColor("red");

@@ -1,7 +1,5 @@
 import React from 'react'
 
-//TODO make this info dynamic:
-// 1) acceepting props from collection list
 
 
 const CollectionListItem = () => {
@@ -87,7 +85,7 @@ const CollectionListItem = () => {
                 <div className="coll-track">Zion Gate Dub</div>
                 <div className="coll-artist">King Tubby</div>
               </li>
-              
+
             </ul>
           </details>
         </li>
@@ -129,7 +127,7 @@ const CollectionListItem = () => {
                 <div className="coll-track">Zion Gate Dub</div>
                 <div className="coll-artist">King Tubby</div>
               </li>
-              
+
             </ul>
           </details>
         </li>

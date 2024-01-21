@@ -4,7 +4,6 @@ import App from './App.jsx'
 import './index.css'
 // import { BrowserRouter, RouterProvider } from "react-router-dom";
 
-//TODO implement router and add routes: home, collections, profile
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

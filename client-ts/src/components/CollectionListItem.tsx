@@ -15,6 +15,7 @@ export default function CollectionListItem({ playlists }: CollectionListItemProp
       {playlists.map((playlist, index) => {
         return (
           <div key={index}>
+            {/* //TODO Give the buttons a class and some margin left so they are indented */}
             <button onClick={() => {
               setShowSongs(p => {
                 let update: boolean[] = [...p]
@@ -22,7 +23,7 @@ export default function CollectionListItem({ playlists }: CollectionListItemProp
                 return update;
               })
             }}>
-              <h1>Playlist #{index + 1}</h1>
+              Playlist #{index + 1}
             </button>
             <button onClick={() => {console.log(playlist._id)}}>Delete</button>
             <br />

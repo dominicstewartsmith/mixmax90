@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import CollectionListItem from "./CollectionListItem";
 
-// TODO map data to pass into collection list item (songs per artist)
 
 const CollectionList = ({ collectionsDB }) => {
   const [displayedSongs, setDisplayedSongs] = useState([]);

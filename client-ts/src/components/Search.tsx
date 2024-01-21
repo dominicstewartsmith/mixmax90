@@ -76,6 +76,7 @@ const Search = () => {
   const heartClick = async () => {
     //TODO make heart toggleable
     //TODO make heart add the songlist to the collection
+    //TODO saved collections should be available to see immediately (currently only visible after refresh)
     setHeartClicked(true);
     setHeartColor("red");
 
@@ -165,6 +166,7 @@ const Search = () => {
             >
               <TbReload />
             </div>
+            {/* //TODO Change this "Nice work!" to something else */}
             <div className="top-tracks-title">Nice work!</div>
             <div
               className="top-tracks-ul-title-container-icon"
