@@ -89,6 +89,7 @@ interface ITrack {
 
 interface ITopTracks {
   tracks: ITrack[];
+  _id?: string
 }
 
 interface ICollection {

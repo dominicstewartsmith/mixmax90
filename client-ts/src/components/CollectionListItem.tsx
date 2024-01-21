@@ -1,13 +1,14 @@
 import { ITopTracks } from "../../types"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface CollectionListItemProps {
   playlists: ITopTracks[]
 }
 export default function CollectionListItem({ playlists }: CollectionListItemProps) {
 
-  const [showSongsIndex, setShowSongsIndex] = useState<number>(0);
-  const [showSongs, setShowSongs] = useState<boolean>(false);
+  const [showSongs, setShowSongs] = useState<boolean[]>(
+    new Array(playlists.length).fill(false)
+    );
 
   return (
     <>
@@ -15,16 +16,25 @@ export default function CollectionListItem({ playlists }: CollectionListItemProp
         return (
           <div key={index}>
             <button onClick={() => {
-              setShowSongsIndex(index);
-              setShowSongs(!showSongs);
+              setShowSongs(p => {
+                let update: boolean[] = [...p]
+                update[index] = !update[index]
+                return update;
+              })
             }}>
               <h1>Playlist #{index + 1}</h1>
             </button>
+            <button onClick={() => {console.log(playlist._id)}}>Delete</button>
             <br />
 
-            {showSongs && showSongsIndex == index &&
+            {showSongs[index] == true &&
               playlist.tracks.map(track => {
-                return <p>{track.name}</p>
+                return (
+                  <p>
+                    <div className="coll-artist">{track.artists[0].name}</div>
+                    <div className="coll-track">{track.name}</div>
+                  </p>
+                )
               })
             }
           </div>

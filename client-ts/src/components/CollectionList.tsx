@@ -12,7 +12,7 @@ const CollectionList = ({ collectionsDB }: CollectionListComponents) => {
       return (
         <>
           <h1><p>{artist.artistName}</p></h1>
-          <CollectionListItem playlists={artist.playlists} />
+          <CollectionListItem playlists={artist.playlists}/>
         </>
       )
     })
