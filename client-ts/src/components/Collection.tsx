@@ -7,10 +7,15 @@ interface CollectionComponentProp {
 }
 
 const Collection = ({ collectionsDB }: CollectionComponentProp) => {
+
+  if (collectionsDB.length == 0) return <p className='collection-title'>Save some playlists to see them here.</p>
+
   return (
     <main>
-      <div className='collection-title'>Collection</div>
-      <CollectionList collectionsDB={collectionsDB}/>
+      <div className='collection-title'>
+        <p>Your Saved Collections</p>
+        <CollectionList collectionsDB={collectionsDB} />
+      </div>
     </main>
   )
 }

@@ -33,13 +33,13 @@ async function deletePlaylist(req: Request, res: Response) {
     const id: string = req.body;
     await Collection.findByIdAndDelete(id);
   } catch (error) {
-    
+
   }
 }
 
 async function getCollections(req: Request, res: Response) {
   try {
-    const collections: ICollection[] = await Collection.find({});
+    const collections: ICollection[] = await Collection.find();
     res.status(200).send(collections);
   } catch (error) {
     console.log(error);

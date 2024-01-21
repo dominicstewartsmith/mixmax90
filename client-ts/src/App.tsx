@@ -6,7 +6,7 @@ import apiService from "./ApiService";
 import { ICollection } from "../types";
 
 function App() {
-  const [collectionsDB, setCollectionsDB] = useState<ICollection[]>([{}] as ICollection[]);
+  const [collectionsDB, setCollectionsDB] = useState<ICollection[]>([]);
 
   useEffect(() => {
     async function loadData() {
