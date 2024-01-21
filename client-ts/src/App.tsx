@@ -7,14 +7,22 @@ import { ICollection } from "../types";
 
 function App() {
   const [collectionsDB, setCollectionsDB] = useState<ICollection[]>([]);
+  const [loadingError, setLoadingError] = useState<boolean>(false)
 
   useEffect(() => {
     async function loadData() {
-      const collections = await apiService.getCollections();
-      setCollectionsDB(collections);
+      try {
+        const collections = await apiService.getCollections();
+        setCollectionsDB(collections);
+      } catch (error) {
+        setLoadingError(true)
+        console.log(error)
+      }
     }
     loadData();
   }, []);
+
+  if (loadingError) return <h1>Error connecting to the server 😔</h1>
 
   return (
     <main className="app-main">

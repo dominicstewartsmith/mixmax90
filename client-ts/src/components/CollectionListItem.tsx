@@ -1,5 +1,5 @@
 import { ITopTracks } from "../../types"
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 interface CollectionListItemProps {
   playlists: ITopTracks[]

@@ -85,13 +85,12 @@ const apiService = {
     })
   },
   getCollections: async () => {
-    try {
-      const response = await fetch("http://localhost:3000/getCollections");
-      const tracks = await response.json();
-      return tracks;
-    } catch (error) {
-      console.error(error);
-    }
+    const response = await fetch("http://localhost:3000/getCollections");
+
+    if (!response.ok) throw new Error('Error fetching collections.')
+
+    const tracks = await response.json();
+    return tracks;
   },
 };
 
