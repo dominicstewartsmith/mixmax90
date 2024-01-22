@@ -1,5 +1,7 @@
 import { ICollection } from "../types.ts";
 
+// TODO Only request new API Token if current one is >60m old (use a state hook).
+
 const apiService = {
   getToken: async () => {
     const url = "https://accounts.spotify.com/api/token";

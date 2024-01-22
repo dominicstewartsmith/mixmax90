@@ -10,10 +10,10 @@ const CollectionList = ({ collectionsDB }: CollectionListComponents) => {
   return (
     collectionsDB.map(artist => {
       return (
-        <>
-          <h3><p>{artist.artistName}</p></h3>
-          <CollectionListItem playlists={artist.playlists}/>
-        </>
+        <div className="collections-artist-container">
+          <p className="collections-artist-name">{artist.artistName}</p>
+          <CollectionListItem playlists={artist.playlists} />
+        </div>
       )
     })
   )

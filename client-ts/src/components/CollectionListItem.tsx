@@ -8,7 +8,7 @@ export default function CollectionListItem({ playlists }: CollectionListItemProp
 
   const [showSongs, setShowSongs] = useState<boolean[]>(
     new Array(playlists.length).fill(false)
-    );
+  );
 
   return (
     <>
@@ -22,19 +22,19 @@ export default function CollectionListItem({ playlists }: CollectionListItemProp
                 update[index] = !update[index]
                 return update;
               })
-            }}>
+            }} className="collections-playlist-toggle">
               Playlist #{index + 1}
             </button>
-            <button onClick={() => {console.log(playlist._id)}}>Delete</button>
+            <button onClick={() => { console.log(playlist._id) }} className="collections-playlist-delete">Delete</button>
             <br />
 
             {showSongs[index] == true &&
               playlist.tracks.map(track => {
                 return (
-                  <p>
-                    <div className="coll-artist">{track.artists[0].name}</div>
-                    <div className="coll-track">{track.name}</div>
-                  </p>
+                  <div className="playlist-container">
+                    <div className="playlist-artist-name">{track.artists[0].name}</div>
+                    <div className="playlist-song-name">{track.name}</div>
+                  </div>
                 )
               })
             }

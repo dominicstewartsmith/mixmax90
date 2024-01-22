@@ -36,7 +36,7 @@ const Search = ({ searchedArtist, setSearchedArtist }) => {
   function getRandomTracksByArtist(tracks) {
     const uniqueArtists = new Set();
     const result = [];
-
+// TODO check by song name?
     tracks.forEach((album) => {
       album.tracks.forEach((track) => {
         const artistId = track.artists[0].id;

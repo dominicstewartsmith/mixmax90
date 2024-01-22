@@ -12,8 +12,8 @@ const Collection = ({ collectionsDB }: CollectionComponentProp) => {
 
   return (
     <main>
-      <div className='collection-title'>
-        <p>Your Saved Collections</p>
+      <div className='collections-container'>
+        <p className='collections-title'>Your Saved Collections</p>
         <CollectionList collectionsDB={collectionsDB} />
       </div>
     </main>
