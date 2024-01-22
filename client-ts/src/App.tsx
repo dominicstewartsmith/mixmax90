@@ -1,14 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import apiService from "./ApiService";
-import { ICollection } from "../types";
+import { Token, ICollection } from "../types";
+
+type MyContextType = {
+  handleUpdateDB: () => void;
+}
+
+export const DataContext = createContext<MyContextType | undefined>(undefined);
 
 function App() {
   const [collectionsDB, setCollectionsDB] = useState<ICollection[]>([]);
+  const [currentToken, setCurrentToken] = useState<Token>({ token: '', time: Date.now() })
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingError, setLoadingError] = useState<boolean>(false);
+
+  const handleUpdateDB = async () => {
+    console.log('🟢 Re-loading database.')
+    const collections = await apiService.getCollections();
+    setCollectionsDB(collections);
+  }
+
+  const loadToken = async () => {
+    const newToken = await apiService.getToken();
+    setCurrentToken(newToken);
+  }
 
   const loadData = async () => {
     try {
@@ -23,6 +41,7 @@ function App() {
 
   useEffect(() => {
     loadData();
+    loadToken();
   }, []);
 
   if (loadingError) return <h2>Error connecting to the server 😔</h2>;
@@ -31,8 +50,10 @@ function App() {
     <>
       {!loading &&
         <main className="app-main">
-          <Header />
-          <Home collectionsDB={collectionsDB} />
+          <DataContext.Provider value={{ handleUpdateDB }}>
+            <Header />
+            <Home collectionsDB={collectionsDB} currentToken={currentToken} />
+          </DataContext.Provider>
         </main>
       }
     </>

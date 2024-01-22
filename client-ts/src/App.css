@@ -223,6 +223,10 @@ input#search {
   padding: .33rem;
 }
 
+.top-tracks-ul-title-container-icon:hover {
+  transform: scale(1.2);
+}
+
 /* #heart{
   color: red;
 } */

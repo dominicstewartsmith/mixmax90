@@ -138,5 +138,6 @@ const collectionSchema = new Schema<ICollection>({
 });
 
 const Collection = mongoose.model("Collection", collectionSchema);
-
+const test = new mongoose.Types.ObjectId("65aea2d10553964caf18d29a")
+//{"playlists._id": ObjectId("65aea2d10553964caf18d29b")}
 export { Collection, ICollection, mongoose };

@@ -1,21 +1,30 @@
 import { ITopTracks } from "../../types"
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import apiService from "../ApiService"
+import { DataContext } from "../App"
 
 interface CollectionListItemProps {
-  playlists: ITopTracks[]
+  playlists: ITopTracks[],
+  parentID: string | undefined
 }
-export default function CollectionListItem({ playlists }: CollectionListItemProps) {
-
+export default function CollectionListItem({ playlists, parentID }: CollectionListItemProps) {
   const [showSongs, setShowSongs] = useState<boolean[]>(
     new Array(playlists.length).fill(false)
   );
+
+  const contextValue = useContext(DataContext)
+
+  if (!contextValue) {
+    throw new Error('No context.');
+  }
+
+  const {handleUpdateDB} = contextValue;
 
   return (
     <>
       {playlists.map((playlist, index) => {
         return (
           <div key={index}>
-            {/* //TODO Give the buttons a class and some margin left so they are indented */}
             <button onClick={() => {
               setShowSongs(p => {
                 let update: boolean[] = [...p]
@@ -25,13 +34,16 @@ export default function CollectionListItem({ playlists }: CollectionListItemProp
             }} className="collections-playlist-toggle">
               Playlist #{index + 1}
             </button>
-            <button onClick={() => { console.log(playlist._id) }} className="collections-playlist-delete">Delete</button>
+            <button onClick={async () => {
+              await apiService.deletePlaylist(parentID, playlist._id);
+              handleUpdateDB();
+              }} className="collections-playlist-delete">Delete</button>
             <br />
 
             {showSongs[index] == true &&
               playlist.tracks.map(track => {
                 return (
-                  <div className="playlist-container">
+                  <div className="playlist-container" key={track.id}>
                     <div className="playlist-artist-name">{track.artists[0].name}</div>
                     <div className="playlist-song-name">{track.name}</div>
                   </div>

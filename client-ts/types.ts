@@ -1,3 +1,8 @@
+interface Token {
+  token: string,
+  time: number
+}
+
 interface IArtist {
   external_urls: {
     spotify: string;
@@ -95,6 +100,7 @@ interface ITopTracks {
 interface ICollection {
   artistName: string;
   playlists: ITopTracks[];
+  _id?: string
 }
 
-export type {ICollection, IAlbum, IArtist, IImage, ITopTracks, ITrack, ISearchResult, ISearchResults};
+export type {Token, ICollection, IAlbum, IArtist, IImage, ITopTracks, ITrack, ISearchResult, ISearchResults};

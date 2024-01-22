@@ -1,8 +1,18 @@
-import { ICollection } from "../types.ts";
-
+import { ICollection, Token } from "../types.ts";
 // TODO Only request new API Token if current one is >60m old (use a state hook).
 
 const apiService = {
+  validateToken: (token: Token): boolean => {
+    const now = Date.now()
+    if ((token.time + (3600 * 1000)) < now) {
+      //Token has expired
+      return false
+    } else {
+      const time = (Date.now() - (token.time + (3600 * 1000))) / 1000
+      console.log(`Token still valid. Expires in ${time}s`)
+      return true;
+    }
+  },
   getToken: async () => {
     const url = "https://accounts.spotify.com/api/token";
     const client_id = import.meta.env.VITE_APP_SPOTIFY_CLIENT_ID;
@@ -17,45 +27,43 @@ const apiService = {
     });
 
     const data = await response.json();
-    return data.access_token;
+    const now = Date.now();
+    console.log(`🟢 New token requested: ${data.access_token}. \nStored at ${new Date(now)}.`)
+
+    return { token: data.access_token, time: now }
   },
-  getArtistId: async (artistName: string) => {
-    const accessToken = await apiService.getToken();
+  getArtistId: async (artistName: string, token: Token) => {
     const searchUrl = `https://api.spotify.com/v1/search?q=${artistName}&type=artist`;
     const response = await fetch(searchUrl, {
       method: "GET",
       headers: {
-        Authorization: "Bearer " + `${accessToken}`,
+        Authorization: "Bearer " + `${token.token}`,
       },
     });
 
     const data = await response.json();
     return data;
   },
-  getRelatedArtists: async (artistId: string) => {
-    const accessToken = await apiService.getToken();
-
+  getRelatedArtists: async (artistId: string, token: Token) => {
     const relatedArtistsUrl = `https://api.spotify.com/v1/artists/${artistId}/related-artists`;
     const relatedArtistsResponse = await fetch(relatedArtistsUrl, {
       method: "Get",
       headers: {
-        Authorization: "Bearer " + `${accessToken}`,
+        Authorization: "Bearer " + `${token.token}`,
       },
     });
 
     const artistData = await relatedArtistsResponse.json();
     return artistData.artists;
   },
-  getAllTracks: async (data: string[]) => {
-    const accessToken = await apiService.getToken();
-
+  getAllTracks: async (data: string[], token: Token) => {
     const topTracks = await Promise.all(
       data.map(async (artistId: string) => {
         const url = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=GB`;
         const response = await fetch(url, {
           method: "Get",
           headers: {
-            Authorization: "Bearer " + `${accessToken}`,
+            Authorization: "Bearer " + `${token.token}`,
           },
         });
 
@@ -76,14 +84,16 @@ const apiService = {
       body: JSON.stringify(tracks),
     });
   },
-  deletePlaylist: async (id: string) => {
+  deletePlaylist: async (parent: string | undefined, playlist: string | undefined) => {
+    const payload = JSON.stringify({ parent, playlist })
+
     await fetch("http://localhost:3000/deletePlaylist", {
       method: "DELETE",
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(id),
+      body: payload,
     })
   },
   getCollections: async () => {

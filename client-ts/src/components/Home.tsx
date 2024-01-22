@@ -1,16 +1,17 @@
 import Search from "./Search";
 import Collection from "./Collection";
-import { ICollection } from "../../types";
+import { ICollection, Token } from "../../types";
+
 
 interface homeComponentProp {
     collectionsDB: ICollection[];
+    currentToken: Token
 }
 
-const Home = ({ collectionsDB }: homeComponentProp) => {
-
+const Home = ({ collectionsDB, currentToken}: homeComponentProp) => {
   return (
     <main className="home-main">
-      <Search />
+      <Search currentToken={currentToken}/>
       <Collection collectionsDB={collectionsDB} />
     </main>
   );

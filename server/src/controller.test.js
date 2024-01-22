@@ -15,7 +15,7 @@ describe('Integration tests', () => {
     beforeAll(async () => {
         await mongoose.connect("mongodb+srv://dominicstewartsmith:pWlC5mllh7DfTLej@cluster0.yegtkhq.mongodb.net/test");
     })
-    
+
     afterEach(async () => {
         await Collection.deleteMany();
     })
@@ -64,8 +64,5 @@ describe('Integration tests', () => {
         expect(resDB.body[0].artistName).toBe("Queen");
         expect(resDB.body[2].artistName).toBe("RATM");
     })
-
-
-
 })
 

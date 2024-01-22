@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { BsSearchHeart } from "react-icons/bs";
 import { GoHeart } from "react-icons/go";
 import { TbReload } from "react-icons/tb";
 import apiService from "../ApiService";
+import { getRandomTracksByArtist, getTracksUpToNinetyMinutes } from "../helpers";
 import {
   IArtist,
   ICollection,
@@ -10,9 +11,21 @@ import {
   ISearchResults,
   ITopTracks,
   ITrack,
+  Token
 } from "../../types";
+import { DataContext } from '../App'
 
-const Search = () => {
+type SearchPropsType = {
+  currentToken: Token
+}
+const Search = ({currentToken}: SearchPropsType) => {
+  const contextValue = useContext(DataContext)
+
+  if (!contextValue) {
+    throw new Error('No context.');
+  }
+  const {handleUpdateDB} = contextValue;
+
   const [searchedArtist, setSearchedArtist] = useState<string>("");
   const [topTracks, setTopTracks] = useState<ITrack[]>([]);
   const [searchResults, setSearchResults] = useState<ISearchResult[]>([]);
@@ -29,48 +42,17 @@ const Search = () => {
     setArtistNameForDB(name);
 
     setArtistId(artistId);
-    const relatedArtists: IArtist[] = await apiService.getRelatedArtists(
-      artistId
-    );
-    const relatedArtistIds: string[] = relatedArtists.map(
-      (artist: IArtist) => artist.id
-    );
-    const allTracks: ITopTracks[] = await apiService.getAllTracks(
-      relatedArtistIds
-    );
-    const randomTracks: ITrack[] = getRandomTracksByArtist(allTracks);
+    const relatedArtists: IArtist[] = await apiService.getRelatedArtists(artistId, currentToken);
+    const relatedArtistIds: string[] = relatedArtists.map((artist: IArtist) => artist.id);
+    const allTracks: ITopTracks[] = await apiService.getAllTracks(relatedArtistIds, currentToken);
+    const randomTracks: ITrack[] = getTracksUpToNinetyMinutes(allTracks);
+    // const randomTracks: ITrack[] = getRandomTracksByArtist(allTracks);
+    // getRandomTracksByArtist(allTracks)
 
     setTopTracks(randomTracks);
     setHeartColor("#eee"); //Reset heart colour
     setSearchResults([]);
     setShowTopTracks(true);
-  }
-
-  function getRandomTracksByArtist(tracks: ITopTracks[]) {
-    //TODO Ensure this function does not include duplicate track names in the final result.
-    const uniqueArtists = new Set();
-    const result: ITrack[] = [];
-
-    tracks.forEach((album) => {
-      album.tracks.forEach((track) => {
-        const artistId = track.artists[0].id;
-
-        // Check if the artist ID is unique
-        if (!uniqueArtists.has(artistId)) {
-          // Add the artist ID to the set of unique artists
-          uniqueArtists.add(artistId);
-
-          // Randomly select a track for the artist
-          const randomIndex = Math.floor(Math.random() * album.tracks.length);
-          const randomTrack = album.tracks[randomIndex];
-
-          // Add the random track to the result array
-          result.push(randomTrack);
-        }
-      });
-    });
-
-    return result;
   }
 
   const heartClick = async () => {
@@ -86,11 +68,12 @@ const Search = () => {
     };
 
     await apiService.savePlaylist(payload);
+    handleUpdateDB();
   };
 
   async function handleSearchClick() {
     let artistIdItems: ISearchResults = await apiService.getArtistId(
-      artistName
+      artistName, currentToken
     );
     setSearchResults(artistIdItems.artists.items);
     setSearchedArtist("");
@@ -100,16 +83,18 @@ const Search = () => {
     setTopTracks([]);
     setHeartColor("#eee"); //Reset heart colour
     const relatedArtists: IArtist[] = await apiService.getRelatedArtists(
-      artistId
+      artistId, currentToken
     );
 
     const relatedArtistIds: string[] = relatedArtists.map(
       (artist) => artist.id
     );
     const allTracks: ITopTracks[] = await apiService.getAllTracks(
-      relatedArtistIds
+      relatedArtistIds, currentToken
     );
-    const randomTracks: ITrack[] = getRandomTracksByArtist(allTracks);
+    const randomTracks: ITrack[] = getTracksUpToNinetyMinutes(allTracks);
+    // getRandomTracksByArtist(allTracks)
+    // const randomTracks: ITrack[] = getRandomTracksByArtist(allTracks);
 
     setTopTracks(randomTracks);
     setSearchResults([]);
@@ -167,7 +152,7 @@ const Search = () => {
               <TbReload />
             </div>
             {/* //TODO Change this "Nice work!" to something else */}
-            <div className="top-tracks-title">Nice work!</div>
+            {/* <div className="top-tracks-title">Nice work!</div> */}
             <div
               className="top-tracks-ul-title-container-icon"
               id="heart"

@@ -1,5 +1,7 @@
 import { Collection, ICollection } from "./models";
 import { Request, Response } from "express";
+import mongoose from "mongoose";
+import {Types} from "mongoose";
 
 //TODO Error handling & send correct success/failure HTTP response codes
 
@@ -32,8 +34,21 @@ async function savePlaylist(req: Request, res: Response) {
 
 async function deletePlaylist(req: Request, res: Response) {
   try {
-    const id: string = req.body;
-    await Collection.findByIdAndDelete(id);
+    //TODO check types?
+    let {parent, playlist} = req.body
+    parent = new mongoose.Types.ObjectId(parent);
+    playlist = new mongoose.Types.ObjectId(playlist);
+
+    const doesExist = await Collection.findOne({"_id": parent});
+    if (doesExist?.playlists.length === 1) {
+      await Collection.findByIdAndDelete({"_id": parent});
+    } else {
+      await Collection.updateOne(
+        {"_id": parent},
+        {$pull: {"playlists": {"_id": playlist}}}
+        );
+    }
+
     res.status(200).send("Deleted");
   } catch (error) {
     console.log(error);
