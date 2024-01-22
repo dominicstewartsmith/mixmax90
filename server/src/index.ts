@@ -1,5 +1,8 @@
 import dotenv from "dotenv";
-dotenv.config();
+
+const filename = process.env.ENV === 'test' ? ".env.test" : ".env";
+
+dotenv.config({path: filename});
 
 const MONGO_URL: string | undefined = process.env.MONGO_URL;
 
