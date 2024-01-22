@@ -20,6 +20,10 @@ describe('Integration tests', () => {
         await Collection.deleteMany();
     })
 
+    afterAll(() => {
+        mongoose.disconnect();
+    })
+
     it('should save collection to the database', async () => {
         const artist = data;
         await request.post('/savePlaylist').send(artist);
@@ -31,6 +35,16 @@ describe('Integration tests', () => {
             expect(resDB.artistName).toBe(artist.artistName)
         }
     })
+
+    it('should add playlist to existing artist', async () => {
+        const collection = data;
+
+        await request.post('/savePlaylist').send(collection);
+        await request.post('/savePlaylist').send(collection);
+        
+        const resDB = await Collection.findOne({artistName: "ABBA"})
+        expect(resDB.playlists.length).toBe(2)
+    });
 
 })
 
