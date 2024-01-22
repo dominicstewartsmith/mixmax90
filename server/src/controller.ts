@@ -26,7 +26,7 @@ async function savePlaylist(req: Request, res: Response) {
     res.status(201).send("Created");
   } catch (error) {
     console.log(error);
-    res.status(400).send(error);
+    res.status(500).send(error);
   }
 }
 
@@ -34,8 +34,10 @@ async function deletePlaylist(req: Request, res: Response) {
   try {
     const id: string = req.body;
     await Collection.findByIdAndDelete(id);
+    res.status(200).send("Deleted");
   } catch (error) {
-
+    console.log(error);
+    res.status(500).send(error);
   }
 }
 

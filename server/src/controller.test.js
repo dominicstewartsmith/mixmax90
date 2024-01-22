@@ -26,7 +26,7 @@ describe('Integration tests', () => {
 
     it('should save collection to the database', async () => {
         const artist = data;
-        await request.post('/savePlaylist').send(artist);
+        await request.post('/savePlaylist').send(artist).expect(201);
 
         const resDB = await Collection.findOne({artistName: "ABBA"})
         expect(resDB).not.toBeNull();
@@ -39,12 +39,33 @@ describe('Integration tests', () => {
     it('should add playlist to existing artist', async () => {
         const collection = data;
 
-        await request.post('/savePlaylist').send(collection);
-        await request.post('/savePlaylist').send(collection);
-        
+        await request.post('/savePlaylist').send(collection).expect(201);
+        await request.post('/savePlaylist').send(collection).expect(201);
+
         const resDB = await Collection.findOne({artistName: "ABBA"})
         expect(resDB.playlists.length).toBe(2)
     });
+
+    it('should get all collections from db', async () => {
+        const collection = data;
+
+        collection.artistName = "Queen"
+        await request.post('/savePlaylist').send(collection).expect(201);
+
+        collection.artistName = "Beatles"
+        await request.post('/savePlaylist').send(collection).expect(201);
+
+        collection.artistName = "RATM"
+        await request.post('/savePlaylist').send(collection).expect(201);
+
+        const resDB = await request.get('/getCollections').expect(200);
+        expect(resDB.body.length).toBe(3);
+
+        expect(resDB.body[0].artistName).toBe("Queen");
+        expect(resDB.body[2].artistName).toBe("RATM");
+    })
+
+
 
 })
 
