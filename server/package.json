@@ -9,7 +9,7 @@
     "tsc": "tsc",
     "postinstall": "npm run tsc",
     "dev": "ts-node-dev --respawn --pretty --transpile-only ./src/index.ts",
-    "dev-test": "ENV='test' ts-node-dev --respawn --pretty --transpile-only ./src/index.ts"
+    "dev-test": "ts-node-dev --respawn --pretty --transpile-only ./src/index.ts"
   },
   "keywords": [],
   "author": "",

@@ -6,6 +6,10 @@ const {Collection} = require("./models")
 const mongoose = require("mongoose")
 const data = require("./test-data/abba-data")
 
+const dotenv = require("dotenv");
+const filename = process.env.NODE_ENV === 'test' ? ".env.test" : ".env";
+dotenv.config({path: filename});
+
 describe('Integration tests', () => {
     const app = express();
     app.use(express.json());
@@ -63,6 +67,30 @@ describe('Integration tests', () => {
 
         expect(resDB.body[0].artistName).toBe("Queen");
         expect(resDB.body[2].artistName).toBe("RATM");
-    })
+    });
+
+    it("should delete a playlist inside a collection", async () => {
+        const collection = data;
+    
+        await request.post("/savePlaylist").send(collection).expect(201);
+    
+        const resDB = await request.get("/getCollections").expect(200);
+    
+        const parentID = resDB.body[0]._id;
+        const playlistID = resDB.body[0].playlists[0]._id;
+        const payload = {
+            parent: parentID,
+            playlist: playlistID
+        }
+    
+        await request.post("/savePlaylist").send(collection).expect(201);
+        await request.post("/savePlaylist").send(collection).expect(201);
+    
+        await request.delete("/deletePlaylist").send(payload).expect(200);
+    
+        const collectionResponse = await request.get("/getCollections").expect(200);
+    
+        expect(collectionResponse.body[0].playlists.length).toBe(2);
+      });
 })
 
