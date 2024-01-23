@@ -11,7 +11,7 @@ const CollectionList = ({ collectionsDB }: CollectionListComponents) => {
     collectionsDB.map(artist => {
       return (
         <div className="collections-artist-container" key={artist._id}>
-          <p className="collections-artist-name">{artist.artistName}</p>
+          <p className="collections-artist-name" data-cy="collection-artist-name">{artist.artistName}</p>
           <CollectionListItem playlists={artist.playlists} parentID={artist._id}/>
         </div>
       )

@@ -106,23 +106,24 @@ const Search = ({currentToken}: SearchPropsType) => {
       <form className="searchForm" onSubmit={(e) => e.preventDefault()}>
         <input
           type="text"
-          // size="50" // Perhaps changes size ???
           name=""
           id="search"
           role="searchbox"
           placeholder=" Find music like..."
           value={searchedArtist}
           onChange={(e) => setSearchedArtist(e.target.value)}
+          data-cy="search-bar"
         />
-        <button onClick={handleSearchClick} type="submit" id="submitButton">
+        <button onClick={handleSearchClick} type="submit" id="submitButton" data-cy="search-button">
           <BsSearchHeart />
         </button>
       </form>
 
-      <ul className="artist-search-ul">
+      <ul className="artist-search-ul" data-cy="artist-search-list">
         {searchResults.map((artist, index) => (
           <li
             className="artist-search-li"
+            data-cy="artist-search-item"
             onClick={() => {
               handleArtistClick(artist.id, artist.name);
             }}
@@ -148,6 +149,7 @@ const Search = ({currentToken}: SearchPropsType) => {
             <div
               className="top-tracks-ul-title-container-icon"
               onClick={handleReloadClick}
+              data-cy="reload-button"
             >
               <TbReload />
             </div>
@@ -158,6 +160,7 @@ const Search = ({currentToken}: SearchPropsType) => {
               id="heart"
               style={{ color: heartColor }}
               onClick={heartClick}
+              data-cy="heart-button"
             >
               <GoHeart />
             </div>
@@ -174,7 +177,7 @@ const Search = ({currentToken}: SearchPropsType) => {
                 )}
               </div>
               <div className="track-details">
-                <div className="track-details-track">{`${track.name}`}</div>
+                <div className="track-details-track" data-cy="track-details-track">{`${track.name}`}</div>
                 <div className="track-details-artist">{`${track.artists[0].name}`}</div>
               </div>
             </li>

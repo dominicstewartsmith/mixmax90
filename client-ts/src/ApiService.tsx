@@ -75,7 +75,7 @@ const apiService = {
     return topTracks;
   },
   savePlaylist: async (tracks: ICollection) => {
-    await fetch("http://localhost:3000/savePlaylist", {
+    await fetch("http://127.0.0.1:3000/savePlaylist", {
       method: "POST",
       mode: "cors",
       headers: {
@@ -87,7 +87,7 @@ const apiService = {
   deletePlaylist: async (parent: string | undefined, playlist: string | undefined) => {
     const payload = JSON.stringify({ parent, playlist })
 
-    await fetch("http://localhost:3000/deletePlaylist", {
+    await fetch("http://127.0.0.1:3000/deletePlaylist", {
       method: "DELETE",
       mode: "cors",
       headers: {
@@ -97,7 +97,7 @@ const apiService = {
     })
   },
   getCollections: async () => {
-    const response = await fetch("http://localhost:3000/getCollections");
+    const response = await fetch("http://127.0.0.1:3000/getCollections");
 
     if (!response.ok) throw new Error('Error fetching collections.')
 

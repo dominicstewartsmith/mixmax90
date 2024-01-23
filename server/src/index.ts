@@ -9,7 +9,7 @@ import cors from "cors";
 import serverRouter from "./router";
 
 const corsConfig = {
-  origin: 'http://localhost:5173',
+  origin: 'http://127.0.0.1:5173',
 };
 
 const PORT: Number = 3000;
