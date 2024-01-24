@@ -3,10 +3,14 @@ import "./App.css";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import apiService from "./ApiService";
-import { Token, ICollection } from "../types";
+import { Token, ICollection, ITrack } from "../types";
 
 type MyContextType = {
   handleUpdateDB: () => void;
+  topTracks: ITrack[];
+  setTopTracks: (tracks: ITrack[]) => void;
+  showTopTracks: boolean;
+  setShowTopTracks: (statement: boolean) => void;
 }
 
 export const DataContext = createContext<MyContextType | undefined>(undefined);
@@ -16,6 +20,8 @@ function App() {
   const [currentToken, setCurrentToken] = useState<Token>({ token: '', time: Date.now() })
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingError, setLoadingError] = useState<boolean>(false);
+  const [topTracks, setTopTracks] = useState<ITrack[]>([]);
+  const [showTopTracks, setShowTopTracks] = useState<boolean>(false);
 
   const handleUpdateDB = async () => {
     console.log('🟢 Re-loading database.')
@@ -50,7 +56,7 @@ function App() {
     <>
       {!loading &&
         <main className="app-main">
-          <DataContext.Provider value={{ handleUpdateDB }}>
+          <DataContext.Provider value={{ handleUpdateDB, topTracks, setTopTracks, showTopTracks, setShowTopTracks }}>
             <Header />
             <Home collectionsDB={collectionsDB} currentToken={currentToken} />
           </DataContext.Provider>

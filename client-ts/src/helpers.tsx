@@ -35,25 +35,31 @@ function rnd(limit: number) {
 }
 
 export function getTracksUpToNinetyMinutes(tracks: ITopTracks[]) {
-  let target = 1000 * 60 * 90;
-  let current = 0;
-  const uniqueSongs = new Set<string>();
-  const songList: ITrack[] = [];
+  try {
+    let target = 1000 * 60 * 90;
+    let current = 0;
+    const uniqueSongs = new Set<string>();
+    const songList: ITrack[] = [];
 
-  const tracksLen = tracks.length - 1;
+    const tracksLen = tracks.length - 1;
 
-  while (current < target) {
-    const a = rnd(tracksLen);
-    const b = rnd(tracks[a].tracks.length - 1);
-    const c = tracks[a].tracks[b];
+    while (current < target) {
+      const a = rnd(tracksLen);
+      const b = rnd(tracks[a].tracks.length - 1);
+      const c = tracks[a].tracks[b];
 
-    if (!uniqueSongs.has(c.name)) {
-      uniqueSongs.add(c.name)
-      current += c.duration_ms;
-      songList.push(c)
+      if (!uniqueSongs.has(c.name)) {
+        uniqueSongs.add(c.name)
+        current += c.duration_ms;
+        songList.push(c)
+      }
     }
-  }
 
-  console.log(`${Math.floor(current / 1000 / 60)} minutes long`)
-  return songList;
+    console.log(`${Math.floor(current / 1000 / 60)} minutes long`)
+    return songList;
+  } catch (error) {
+    console.log(error);
+    alert('Error fetching songs, please try again.')
+    throw new Error('Error fetching songs, please try again.')
+  }
 }

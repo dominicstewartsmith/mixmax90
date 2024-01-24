@@ -1,68 +1,22 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { BsSearchHeart } from "react-icons/bs";
-import { GoHeart } from "react-icons/go";
-import { TbReload } from "react-icons/tb";
+
 import apiService from "../ApiService";
-import { getTracksUpToNinetyMinutes } from "../helpers";
 import {
-  IArtist,
-  ICollection,
   ISearchResult,
   ISearchResults,
-  ITopTracks,
-  ITrack,
   Token
 } from "../../types";
-import { DataContext } from '../App'
+import SearchResults from "./SearchResults";
 
 type SearchPropsType = {
   currentToken: Token
 }
 const Search = ({currentToken}: SearchPropsType) => {
-  const contextValue = useContext(DataContext)
-
-  if (!contextValue) {
-    throw new Error('No context.');
-  }
-  const {handleUpdateDB} = contextValue;
-
   const [searchedArtist, setSearchedArtist] = useState<string>("");
   const [searchResults, setSearchResults] = useState<ISearchResult[]>([]);
-  const [showTopTracks, setShowTopTracks] = useState<boolean>(false);
 
   let artistName: string = searchedArtist.replace(/\s+/g, "+");
-
-  async function handleArtistClick(artistId: string, name: string) {
-    setTopTracks([]); //Neccessary?
-    setArtistNameForDB(name);
-
-    setArtistId(artistId);
-    const relatedArtists: IArtist[] = await apiService.getRelatedArtists(artistId, currentToken);
-    const relatedArtistIds: string[] = relatedArtists.map((artist: IArtist) => artist.id);
-    const allTracks: ITopTracks[] = await apiService.getAllTracks(relatedArtistIds, currentToken);
-    const randomTracks: ITrack[] = getTracksUpToNinetyMinutes(allTracks);
-
-    setTopTracks(randomTracks);
-    setHeartColor("#eee"); //Reset heart colour
-    setSearchResults([]);
-    setShowTopTracks(true);
-  }
-
-  const heartClick = async () => {
-    //TODO make heart toggleable
-    //TODO make heart add the songlist to the collection
-    //TODO saved collections should be available to see immediately (currently only visible after refresh)
-    setHeartClicked(true);
-    setHeartColor("red");
-
-    let payload: ICollection = {
-      artistName: artistNameForDB,
-      playlists: [{ tracks: topTracks }],
-    };
-
-    await apiService.savePlaylist(payload);
-    handleUpdateDB();
-  };
 
   async function handleSearchClick() {
     let artistIdItems: ISearchResults = await apiService.getArtistId(
@@ -72,115 +26,34 @@ const Search = ({currentToken}: SearchPropsType) => {
     setSearchedArtist("");
   }
 
-  async function handleReloadClick() {
-    setTopTracks([]);
-    setHeartColor("#eee"); //Reset heart colour
-    const relatedArtists: IArtist[] = await apiService.getRelatedArtists(
-      artistId, currentToken
-    );
-
-    const relatedArtistIds: string[] = relatedArtists.map(
-      (artist) => artist.id
-    );
-    const allTracks: ITopTracks[] = await apiService.getAllTracks(
-      relatedArtistIds, currentToken
-    );
-    const randomTracks: ITrack[] = getTracksUpToNinetyMinutes(allTracks);
-    // getRandomTracksByArtist(allTracks)
-    // const randomTracks: ITrack[] = getRandomTracksByArtist(allTracks);
-
-    setTopTracks(randomTracks);
-    setSearchResults([]);
-    setShowTopTracks(true);
+  function clearSearchResults() {
+    setSearchResults([])
   }
 
   return (
-    <div>
+    <>
       <form className="searchForm" onSubmit={(e) => e.preventDefault()}>
-        <input
-          type="text"
-          name=""
-          id="search"
-          role="searchbox"
-          placeholder=" Find music like..."
-          value={searchedArtist}
-          onChange={(e) => setSearchedArtist(e.target.value)}
-          data-cy="search-bar"
-          data-testid="search-bar"
-        />
-        <button onClick={handleSearchClick} type="submit" id="submitButton" data-cy="search-button">
-          <BsSearchHeart />
-        </button>
+      <input
+        type="text"
+        name=""
+        id="search"
+        role="searchbox"
+        placeholder=" Find music like..."
+        value={searchedArtist}
+        onChange={(e) => setSearchedArtist(e.target.value)}
+        data-cy="search-bar"
+        data-testid="search-bar"
+      />
+      <button onClick={handleSearchClick} type="submit" id="submitButton" data-cy="search-button">
+        <BsSearchHeart />
+      </button>
       </form>
 
-      <ul className="artist-search-ul" data-cy="artist-search-list">
-        {searchResults.map((artist, index) => (
-          <li
-            className="artist-search-li"
-            data-cy="artist-search-item"
-            data-testid="artist-search-item"
-            onClick={() => {
-              handleArtistClick(artist.id, artist.name);
-            }}
-            key={index}
-          >
-            <div className="artist-search-thumb-container">
-              {artist.images[2] && (
-                <img
-                  className="artist-search-thumb-img"
-                  src={artist.images[2].url}
-                  alt=""
-                />
-              )}
-            </div>
-            <div className="artist-search-name">{artist.name}</div>
-          </li>
-        ))}
-      </ul>
-
-      {showTopTracks && (
-        <ul className="top-tracks-ul">
-          <div className="top-tracks-ul-title-container">
-            <div
-              className="top-tracks-ul-title-container-icon"
-              onClick={handleReloadClick}
-              data-cy="reload-button"
-            >
-              <TbReload />
-            </div>
-            {/* //TODO Change this "Nice work!" to something else */}
-            {/* <div className="top-tracks-title">Nice work!</div> */}
-            <div
-              className="top-tracks-ul-title-container-icon"
-              id="heart"
-              style={{ color: heartColor }}
-              onClick={heartClick}
-              data-cy="heart-button"
-            >
-              <GoHeart />
-            </div>
-          </div>
-          {topTracks.map((track, index) => (
-            <li className="top-tracks-li" key={index}>
-              <div className="top-tracks-thumb-container">
-                {track.album.images[2] && (
-                  <img
-                    className="top-tracks-thumb-img"
-                    src={track.album.images[2].url}
-                    alt=""
-                  />
-                )}
-              </div>
-              <div className="track-details">
-                <div className="track-details-track" data-cy="track-details-track">{`${track.name}`}</div>
-                <div className="track-details-artist">{`${track.artists[0].name}`}</div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+      {searchResults &&
+        <SearchResults searchResults={searchResults} currentToken={currentToken} clearSearchResults={clearSearchResults}/>
+      }
+    </>
+  )
 };
 
 export default Search;
