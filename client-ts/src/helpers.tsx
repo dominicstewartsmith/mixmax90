@@ -2,8 +2,6 @@
 import { ITrack, ITopTracks } from "../types";
 
 export function getRandomTracksByArtist(tracks: ITopTracks[]) {
-  console.log('Random')
-  console.log(tracks)
   //TODO Ensure this function does not include duplicate track names in the final result.
   const uniqueArtists = new Set();
   const result: ITrack[] = [];
@@ -43,15 +41,23 @@ export function getTracksUpToNinetyMinutes(tracks: ITopTracks[]) {
 
     const tracksLen = tracks.length - 1;
 
-    while (current < target) {
+    let maxAttempts: number = 0;
+    tracks.forEach(artist => {
+      maxAttempts += artist.tracks.length
+    })
+
+    while (current < target || maxAttempts == 0) {
       const a = rnd(tracksLen);
       const b = rnd(tracks[a].tracks.length - 1);
       const c = tracks[a].tracks[b];
 
-      if (!uniqueSongs.has(c.name)) {
-        uniqueSongs.add(c.name)
-        current += c.duration_ms;
-        songList.push(c)
+      if (c.album.images?.length <= 3 && c?.preview_url) {
+        if (!uniqueSongs.has(c.name)) {
+          uniqueSongs.add(c.name)
+          current += c.duration_ms;
+          songList.push(c)
+          maxAttempts--;
+        }
       }
     }
 

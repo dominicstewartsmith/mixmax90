@@ -206,6 +206,16 @@ input#search {
   max-width: 100%;
   min-width: 64px;
   margin: 0 auto;
+  border-radius: 15px;
+}
+
+.top-tracks-thumb-img:hover {
+  transition: .2s ease;
+  transform: scale(1.2);
+  opacity: 0.3;
+}
+.top-tracks-thumb-img:hover .middle {
+  opacity: 1;
 }
 
 .artist-search-name {
@@ -242,7 +252,10 @@ input#search {
 .top-tracks-li {
   border-top: 1px solid #717171;
   display: flex;
-  margin-top: .33rem;
+  height: 90px;
+  margin-left: 15px;
+  align-items: center;
+  /* justify-content: space-evenly; */
 }
 
 .track-details {
@@ -251,14 +264,29 @@ input#search {
   justify-content: center;
   align-items: flex-start;
   margin-left: 1.2rem;
-  color: #9b9b9b;
+  color: white;
+}
+
+.hidden-play-button {
+  font-size: 20px;
+  z-index: 2;
+}
+
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
 }
 
 .track-details-track {
   font-size: 14px;
   margin-bottom: .33rem;
   text-align: left;
-
 }
 
 .track-details-artist {

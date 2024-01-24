@@ -28,7 +28,7 @@ const apiService = {
 
     const data = await response.json();
     const now = Date.now();
-    console.log(`🟢 New token requested: ${data.access_token}. \nStored at ${new Date(now)}.`)
+    // console.log(`🟢 New token requested: ${data.access_token}. \nStored at ${new Date(now)}.`)
 
     return { token: data.access_token, time: now }
   },

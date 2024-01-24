@@ -18,8 +18,6 @@ const Search = ({currentToken}: SearchPropsType) => {
   const [showResults, setShowResults] = useState<boolean>(false);
 
   let artistName: string = searchedArtist.replace(/\s+/g, "+");
-  console.log(artistName)
-  console.log(currentToken)
 
   async function handleSearchClick() {
     let artistIdItems: ISearchResults = await apiService.getArtistId(
