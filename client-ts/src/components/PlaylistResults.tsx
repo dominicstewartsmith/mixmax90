@@ -63,8 +63,12 @@ export default function PlaylistResults ({heartColor, resetHeartColor, currentTo
   }
 
   function handlePlaySong(index: number) {
-    setPlaying(!playing)
-    setPlayingIndex(index)
+    if (playing && index != playingIndex) {
+      setPlayingIndex(index)
+    } else {
+      setPlaying(!playing)
+      setPlayingIndex(index)
+    }
   }
 
   return (
@@ -80,7 +84,6 @@ export default function PlaylistResults ({heartColor, resetHeartColor, currentTo
             >
               <TbReload />
             </div>
-            {/* //TODO Change this "Nice work!" to something else */}
             <div className="top-tracks-title">Click the icons to hear a preview!</div>
             <div
               className="top-tracks-ul-title-container-icon"

@@ -5,15 +5,21 @@ const apiService = {
   validateToken: (token: Token): boolean => {
     const now = Date.now()
     if ((token.time + (3600 * 1000)) < now) {
+      console.log('Token expired.')
       //Token has expired
       return false
     } else {
-      const time = (Date.now() - (token.time + (3600 * 1000))) / 1000
-      console.log(`Token still valid. Expires in ${time}s`)
+      const issueTimePlusOneHour = token.time + (3600 * 1000)
+      const validUntil = Date.now() - issueTimePlusOneHour
+      const validUntilAsSeconds = validUntil / 1000
+      const validUntilAsMinutes = validUntilAsSeconds / 60
+
+      const timeLeft = Math.floor(validUntilAsMinutes * -1)
+      console.log(`Token still valid. Expires in ${timeLeft}m`)
       return true;
     }
   },
-  getToken: async () => {
+  getNewToken: async () => {
     const url = "https://accounts.spotify.com/api/token";
     const client_id = import.meta.env.VITE_APP_SPOTIFY_CLIENT_ID;
     const client_secret = import.meta.env.VITE_APP_SPOTIFY_CLIENT_SECRET;
@@ -28,9 +34,29 @@ const apiService = {
 
     const data = await response.json();
     const now = Date.now();
-    // console.log(`🟢 New token requested: ${data.access_token}. \nStored at ${new Date(now)}.`)
+    console.log(`🟢 New token requested: ${data.access_token}. \nStored at ${new Date(now)}.`)
 
     return { token: data.access_token, time: now }
+  },
+  saveToken: async (token: Token) => {
+    await fetch('http://127.0.0.1:3000/saveToken', {
+      method: 'POST',
+      headers: {
+        'Content-Type': "application/json"
+      },
+      body: JSON.stringify(token)
+    })
+    console.log('Token saved.')
+  },
+  retrieveToken: async () => {
+    const response = await fetch('http://127.0.0.1:3000/retrieveToken');
+    const data = await response.json();
+    return data;
+  },
+  deleteToken: async () => {
+    await fetch('http://127.0.0.1:3000/deleteToken', {
+      method: 'DELETE'
+    })
   },
   getArtistId: async (artistName: string, token: Token) => {
     const searchUrl = `https://api.spotify.com/v1/search?q=${artistName}&type=artist`;
@@ -73,6 +99,30 @@ const apiService = {
     );
 
     return topTracks;
+  },
+  getUserId: async (token: Token) => {
+    const url = "https://api.spotify.com/v1/me"
+    const response = await fetch(url, {
+      method: "Get",
+      headers: {
+        Authorization: "Bearer " + `${token.token}`,
+      },
+    });
+    const data = await response.json();
+    console.log(data)
+    return data;
+  },
+  getUserPlaylists: async (token: Token, user_id: string) => {
+    const url = `https://api.spotify.com/v1/users/${user_id}/playlists`;
+    const response = await fetch(url, {
+      method: "Get",
+      headers: {
+        Authorization: "Bearer " + `${token.token}`,
+      },
+    });
+    const data = await response.json();
+    console.log(data)
+    return data;
   },
   savePlaylist: async (tracks: ICollection) => {
     await fetch("http://127.0.0.1:3000/savePlaylist", {

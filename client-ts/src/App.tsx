@@ -30,8 +30,13 @@ function App() {
   }
 
   const loadToken = async () => {
-    const newToken = await apiService.getToken();
-    setCurrentToken(newToken);
+    const previousToken = await apiService.retrieveToken();
+    if (apiService.validateToken(previousToken)) {
+      setCurrentToken(previousToken);
+    } else {
+      const newToken = await apiService.getNewToken();
+      apiService.saveToken(newToken);
+    }
   }
 
   const loadData = async () => {
