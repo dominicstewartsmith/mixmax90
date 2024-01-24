@@ -18,6 +18,8 @@ type PlaylistResultsPropType = {
 
 export default function PlaylistResults ({heartColor, resetHeartColor, currentToken, artistNameForDB, topTracks, artistId, clearSearchResults}: PlaylistResultsPropType) {
   const [heartClicked, setHeartClicked] = useState<boolean>(false);
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [playingIndex, setPlayingIndex] = useState<number>(0);
   const contextValue = useContext(DataContext)
 
   if (!contextValue) {
@@ -60,9 +62,14 @@ export default function PlaylistResults ({heartColor, resetHeartColor, currentTo
     setShowTopTracks(true);
   }
 
+  function handlePlaySong(index: number) {
+    setPlaying(!playing)
+    setPlayingIndex(index)
+  }
 
   return (
 
+<>
 
   <ul className="top-tracks-ul">
           <div className="top-tracks-ul-title-container">
@@ -74,7 +81,7 @@ export default function PlaylistResults ({heartColor, resetHeartColor, currentTo
               <TbReload />
             </div>
             {/* //TODO Change this "Nice work!" to something else */}
-            {/* <div className="top-tracks-title">Nice work!</div> */}
+            <div className="top-tracks-title">Click the icons to hear a preview!</div>
             <div
               className="top-tracks-ul-title-container-icon"
               id="heart"
@@ -89,19 +96,27 @@ export default function PlaylistResults ({heartColor, resetHeartColor, currentTo
             <li className="top-tracks-li" key={index}>
               <div className="top-tracks-thumb-container">
                 {track.album.images[2] && (
-                  <img
-                    className="top-tracks-thumb-img"
-                    src={track.album.images[2].url}
-                    alt=""
-                  />
+                  <>
+                    <img
+                      onClick={() => handlePlaySong(index)}
+                      className="top-tracks-thumb-img"
+                      src={track.album.images[2].url}
+                      alt=""
+                      />
+                    </>
                 )}
               </div>
               <div className="track-details">
                 <div className="track-details-track" data-cy="track-details-track">{`${track.name}`}</div>
                 <div className="track-details-artist">{`${track.artists[0].name}`}</div>
+                {track.preview_url && playing && (index == playingIndex) &&
+                  <audio src={track.preview_url} autoPlay/>
+                }
               </div>
             </li>
           ))}
         </ul>
+
+</>
   )
 }
