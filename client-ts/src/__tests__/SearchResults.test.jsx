@@ -20,25 +20,16 @@ describe("SearchResults component tests", () => {
   it("should show the playlist when an artist is clicked", async () => {
     const searchResults = searchResultsData;
     
-    const fakePlaylistFunction = vi.fn(() => {return fakePlaylist})
+    const fakePlaylistFunction = vi.fn()
     
     render(<SearchResults searchResults={searchResults} handleArtistClick={fakePlaylistFunction}/>);
 
     const artist = screen.getAllByTestId("artist-search-item");
     await userEvent.click(artist[0]);
 
-    vi.mock('../components/SearchResults', async (importOriginal) => {
-        const mod = await importOriginal()
-        return {
-          ...mod,
-          // replace some exports
-          namedExport: vi.fn(),
-        }
-      })
-
-    // expect(fakePlaylistFunction).toHaveBeenCalled();
+    expect(fakePlaylistFunction).toHaveBeenCalled();
 
 
-    // const spy = vi.spyOn(SearchResults, SearchResults.handleArtistClick).mockImplementation(fakePlaylist);
+    const spy = vi.spyOn(SearchResults, SearchResults.handleArtistClick).mockImplementation(fakePlaylist);
 });
 });
