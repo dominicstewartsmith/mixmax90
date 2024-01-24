@@ -11,7 +11,7 @@ interface homeComponentProp {
 const Home = ({ collectionsDB, currentToken}: homeComponentProp) => {
   return (
     <main className="home-main">
-      <Search currentToken={currentToken}/>
+      <Search currentToken={currentToken} data-testid="search-bar"/>
       <Collection collectionsDB={collectionsDB} />
     </main>
   );

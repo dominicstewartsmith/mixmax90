@@ -15,8 +15,11 @@ type SearchPropsType = {
 const Search = ({currentToken}: SearchPropsType) => {
   const [searchedArtist, setSearchedArtist] = useState<string>("");
   const [searchResults, setSearchResults] = useState<ISearchResult[]>([]);
+  const [showResults, setShowResults] = useState<boolean>(false);
 
   let artistName: string = searchedArtist.replace(/\s+/g, "+");
+  console.log(artistName)
+  console.log(currentToken)
 
   async function handleSearchClick() {
     let artistIdItems: ISearchResults = await apiService.getArtistId(
@@ -24,6 +27,7 @@ const Search = ({currentToken}: SearchPropsType) => {
     );
     setSearchResults(artistIdItems.artists.items);
     setSearchedArtist("");
+    setShowResults(true);
   }
 
   function clearSearchResults() {
@@ -44,12 +48,12 @@ const Search = ({currentToken}: SearchPropsType) => {
         data-cy="search-bar"
         data-testid="search-bar"
       />
-      <button onClick={handleSearchClick} type="submit" id="submitButton" data-cy="search-button">
+      <button onClick={handleSearchClick} type="submit" id="submitButton" data-cy="search-button" data-testid="search-button">
         <BsSearchHeart />
       </button>
       </form>
 
-      {searchResults &&
+      {showResults &&
         <SearchResults searchResults={searchResults} currentToken={currentToken} clearSearchResults={clearSearchResults}/>
       }
     </>
