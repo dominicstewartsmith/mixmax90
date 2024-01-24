@@ -3,7 +3,7 @@ import { BsSearchHeart } from "react-icons/bs";
 import { GoHeart } from "react-icons/go";
 import { TbReload } from "react-icons/tb";
 import apiService from "../ApiService";
-import { getRandomTracksByArtist, getTracksUpToNinetyMinutes } from "../helpers";
+import { getTracksUpToNinetyMinutes } from "../helpers";
 import {
   IArtist,
   ICollection,
@@ -27,13 +27,8 @@ const Search = ({currentToken}: SearchPropsType) => {
   const {handleUpdateDB} = contextValue;
 
   const [searchedArtist, setSearchedArtist] = useState<string>("");
-  const [topTracks, setTopTracks] = useState<ITrack[]>([]);
   const [searchResults, setSearchResults] = useState<ISearchResult[]>([]);
-  const [artistId, setArtistId] = useState<string>("");
   const [showTopTracks, setShowTopTracks] = useState<boolean>(false);
-  const [heartClicked, setHeartClicked] = useState<boolean>(false);
-  const [heartColor, setHeartColor] = useState<string>("#eee");
-  const [artistNameForDB, setArtistNameForDB] = useState<string>("");
 
   let artistName: string = searchedArtist.replace(/\s+/g, "+");
 
@@ -46,8 +41,6 @@ const Search = ({currentToken}: SearchPropsType) => {
     const relatedArtistIds: string[] = relatedArtists.map((artist: IArtist) => artist.id);
     const allTracks: ITopTracks[] = await apiService.getAllTracks(relatedArtistIds, currentToken);
     const randomTracks: ITrack[] = getTracksUpToNinetyMinutes(allTracks);
-    // const randomTracks: ITrack[] = getRandomTracksByArtist(allTracks);
-    // getRandomTracksByArtist(allTracks)
 
     setTopTracks(randomTracks);
     setHeartColor("#eee"); //Reset heart colour
@@ -113,6 +106,7 @@ const Search = ({currentToken}: SearchPropsType) => {
           value={searchedArtist}
           onChange={(e) => setSearchedArtist(e.target.value)}
           data-cy="search-bar"
+          data-testid="search-bar"
         />
         <button onClick={handleSearchClick} type="submit" id="submitButton" data-cy="search-button">
           <BsSearchHeart />
@@ -124,6 +118,7 @@ const Search = ({currentToken}: SearchPropsType) => {
           <li
             className="artist-search-li"
             data-cy="artist-search-item"
+            data-testid="artist-search-item"
             onClick={() => {
               handleArtistClick(artist.id, artist.name);
             }}
