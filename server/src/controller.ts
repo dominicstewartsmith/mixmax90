@@ -1,9 +1,7 @@
-import { Collection, ICollection } from "./models";
+import { Collection, TokenModel, ICollection, IToken } from "./models";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import {Types} from "mongoose";
-
-//TODO Error handling & send correct success/failure HTTP response codes
 
 async function savePlaylist(req: Request, res: Response) {
   try {
@@ -34,7 +32,6 @@ async function savePlaylist(req: Request, res: Response) {
 
 async function deletePlaylist(req: Request, res: Response) {
   try {
-    //TODO check types?
     let {parent, playlist} = req.body
     parent = new mongoose.Types.ObjectId(parent);
     playlist = new mongoose.Types.ObjectId(playlist);
@@ -66,4 +63,31 @@ async function getCollections(req: Request, res: Response) {
   }
 }
 
-export { savePlaylist, getCollections, deletePlaylist };
+async function saveToken (req: Request, res: Response) {
+  try {
+    await TokenModel.deleteMany();
+    await TokenModel.create(req.body);
+    res.status(201).send("Created");
+  } catch (error) {
+    console.log(error)
+  }
+}
+async function retrieveToken (req: Request, res: Response) {
+  try {
+    const response = await TokenModel.findOne();
+    res.status(200).send(response)
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function deleteToken(req: Request, res: Response) {
+  try {
+    await TokenModel.deleteMany();
+    res.status(200).send('OK')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export { savePlaylist, getCollections, deletePlaylist, saveToken, retrieveToken, deleteToken };

@@ -137,7 +137,15 @@ const collectionSchema = new Schema<ICollection>({
   playlists: [topTracksSchema],
 });
 
+interface IToken {
+  token: string,
+  time: number
+}
+const tokenSchema = new Schema<IToken>({
+  token: String,
+  time: Number
+})
+
+const TokenModel = mongoose.model("Token", tokenSchema);
 const Collection = mongoose.model("Collection", collectionSchema);
-const test = new mongoose.Types.ObjectId("65aea2d10553964caf18d29a")
-//{"playlists._id": ObjectId("65aea2d10553964caf18d29b")}
-export { Collection, ICollection, mongoose };
+export { Collection, IToken, TokenModel, ICollection, mongoose };

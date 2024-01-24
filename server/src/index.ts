@@ -1,7 +1,9 @@
 import dotenv from "dotenv";
-dotenv.config();
+const filename = process.env.ENV === 'test' ? '.env.test' : '.env'
+dotenv.config({path: filename});
 
 const MONGO_URL: string | undefined = process.env.MONGO_URL;
+console.log(MONGO_URL)
 
 import {mongoose} from './models';
 import express, { Express } from "express";
