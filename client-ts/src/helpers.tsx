@@ -1,5 +1,5 @@
 // Helper functions
-import { ITrack, ITopTracks } from "../types";
+import { ITrack, ITopTracks, Token } from "../types";
 
 export function getRandomTracksByArtist(tracks: ITopTracks[]) {
   //TODO Ensure this function does not include duplicate track names in the final result.
@@ -67,5 +67,26 @@ export function getTracksUpToNinetyMinutes(tracks: ITopTracks[]) {
     console.log(error);
     alert('Error fetching songs, please try again.')
     throw new Error('Error fetching songs, please try again.')
+  }
+}
+export async function validateToken (token: Token): Promise<any> {
+  const timeTokenIssued = token.time;
+  const tokenValidForInSeconds = 3600;
+  const tokenExpiresAt = timeTokenIssued + (tokenValidForInSeconds * 1000);
+
+  let tokenExpiresAtAsDate = new Date(tokenExpiresAt)
+  let currentTimeAsDate = new Date(Date.now())
+
+  if (currentTimeAsDate > tokenExpiresAtAsDate) {
+    console.log('Token expired.')
+    // await apiService.deleteToken()
+    window.localStorage.removeItem("token");
+    window.localStorage.removeItem("issuedAt");
+    return false;
+  } else {
+    const dateDifference = currentTimeAsDate.getTime() - tokenExpiresAtAsDate.getTime()
+    const inMinutes = Math.floor(dateDifference / 1000 / 60 * -1)
+    console.log(`Token still valid. Expires in ${inMinutes}m`)
+    return true;
   }
 }

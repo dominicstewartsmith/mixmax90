@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import apiService from "./ApiService";
 import { Token, ICollection, ITrack } from "../types";
+import { validateToken } from "./helpers";
 
 type MyContextType = {
   handleUpdateDB: () => void;
@@ -30,20 +31,28 @@ function App() {
   }
 
   const loadToken = async () => {
-    const previousToken = await apiService.retrieveToken();
+    // const previousToken = await apiService.retrieveToken();
+    const previousToken: string = window.localStorage.getItem("token") || "";
+    const previousTokenTime: number = Number(window.localStorage.getItem('issuedAt'));
+
+    let token = { token: previousToken, time: previousTokenTime }
 
     if (previousToken) {
-      if (await apiService.validateToken(previousToken)) {
-        setCurrentToken(previousToken);
+      if (await validateToken(token)) {
+        setCurrentToken(token);
       } else {
         const newToken = await apiService.getNewToken();
-        await apiService.saveToken(newToken);
+        window.localStorage.setItem("token", newToken.token);
+        window.localStorage.setItem("issuedAt", newToken.time.toString());
+        // await apiService.saveToken(newToken);
         setCurrentToken(newToken);
       }
     } else {
       //No token currently saved in db
       const newToken = await apiService.getNewToken();
-      await apiService.saveToken(newToken);
+      window.localStorage.setItem("token", newToken.token);
+      window.localStorage.setItem("issuedAt", newToken.time.toString());
+      // await apiService.saveToken(newToken);
       setCurrentToken(newToken);
     }
   };

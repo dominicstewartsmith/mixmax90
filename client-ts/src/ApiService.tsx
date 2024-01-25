@@ -2,25 +2,6 @@ import { ICollection, Token } from "../types.ts";
 // TODO Only request new API Token if current one is >60m old (use a state hook).
 
 const apiService = {
-  validateToken: async (token: Token): Promise<any> => {
-    const timeTokenIssued = token.time;
-    const tokenValidForInSeconds = 3600;
-    const tokenExpiresAt = timeTokenIssued + (tokenValidForInSeconds * 1000);
-
-    let tokenExpiresAtAsDate = new Date(tokenExpiresAt)
-    let currentTimeAsDate = new Date(Date.now())
-
-    if (currentTimeAsDate > tokenExpiresAtAsDate) {
-      console.log('Token expired.')
-      await apiService.deleteToken()
-      return false;
-    } else {
-      const dateDifference = currentTimeAsDate.getTime() - tokenExpiresAtAsDate.getTime()
-      const inMinutes = Math.floor(dateDifference / 1000 / 60 * -1)
-      console.log(`Token still valid. Expires in ${inMinutes}m`)
-      return true;
-    }
-  },
   getNewToken: async () => {
     const url = "https://accounts.spotify.com/api/token";
     const client_id = import.meta.env.VITE_APP_SPOTIFY_CLIENT_ID;
