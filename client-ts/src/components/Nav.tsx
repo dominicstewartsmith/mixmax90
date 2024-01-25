@@ -11,21 +11,22 @@ const Nav = () => {
         <ul className="nav">
           <li className="nav-item">
             {/* <Link to="/"> */}
-            <GoHome />
+            {/* <GoHome /> */}
             {/* <br />
               Home */}
             {/* </Link> */}
           </li>
           <li className="nav-item">
             {/* <Link to="/collection"> */}
-            <VscLibrary />
+
+            <a href="#playlists-anchor"><VscLibrary /></a>
             {/* <br />
               Collection */}
             {/* </Link> */}
           </li>
           <li className="nav-item">
             {/* <Link> */}
-            <VscAccount />
+            {/* <VscAccount /> */}
             {/* </Link> */}
           </li>
         </ul>

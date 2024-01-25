@@ -1,13 +1,15 @@
-import { ITopTracks } from "../../types"
+import { ITopTracks, Token } from "../../types"
 import { useState, useContext } from 'react'
 import apiService from "../ApiService"
 import { DataContext } from "../App"
 
 interface CollectionListItemProps {
   playlists: ITopTracks[],
-  parentID: string | undefined
+  parentID: string | undefined,
+  artistName: string,
+  currentToken: Token
 }
-export default function CollectionListItem({ playlists, parentID }: CollectionListItemProps) {
+export default function CollectionListItem({ playlists, parentID, artistName, currentToken }: CollectionListItemProps) {
   const [showSongs, setShowSongs] = useState<boolean[]>(
     new Array(playlists.length).fill(false)
   );
@@ -23,6 +25,7 @@ export default function CollectionListItem({ playlists, parentID }: CollectionLi
   return (
     <>
       {playlists.map((playlist, index) => {
+        const uris = playlist.tracks.map(song => song.uri);
         return (
           <div key={index}>
             <button onClick={() => {
@@ -39,6 +42,11 @@ export default function CollectionListItem({ playlists, parentID }: CollectionLi
               handleUpdateDB();
               }} className="collections-playlist-delete" data-cy="collections-playlist-delete" data-testid="collections-playlist-delete">Delete</button>
             <br />
+            {/* <button onClick={async () => {
+              const playlist_id = await apiService.spotifyCreateBlankPlaylist(`${artistName} #${index + 1}`, currentToken);
+              await apiService.spotifyAddSongsToPlaylist(playlist_id, currentToken, uris);
+              }} className="collections-playlist-addSpotify">Add To Spotify</button> */}
+            {/* <br /> */}
 
             {showSongs[index] == true &&
               playlist.tracks.map(track => {

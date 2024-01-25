@@ -1,3 +1,4 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -180,6 +181,10 @@ input#search {
   margin-top: 1.66rem;
 }
 
+.artist-search-thumb-img {
+  margin-left: 25px;
+}
+
 .artist-search-li {
   cursor: pointer;
   min-width: 100%;
@@ -189,6 +194,7 @@ input#search {
   color: #eee;
   background-color: rgb(81, 79, 79);
   margin: .66rem 0;
+  padding-left: 25px;
   /* border: 2px solid blue; */
   /* height: 64px; */
 }
@@ -212,7 +218,6 @@ input#search {
 .top-tracks-thumb-img:hover {
   transition: .2s ease;
   transform: scale(1.2);
-  opacity: 0.3;
 }
 .top-tracks-thumb-img:hover .middle {
   opacity: 1;
@@ -315,7 +320,7 @@ a {
 }
 
 
-.collection-list-item-ul {}
+/* .collection-list-item-ul {} */
 
 .collection-list-item-li {
   /* border: 2px solid magenta; */

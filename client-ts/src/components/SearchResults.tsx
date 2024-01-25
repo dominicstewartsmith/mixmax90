@@ -52,7 +52,6 @@ export default function SearchResults({
     );
     const randomTracks: ITrack[] = getTracksUpToNinetyMinutes(allTracks);
 
-    console.log(randomTracks)
     setTopTracks(randomTracks);
     setHeartColor("#eee"); //Reset heart colour
     clearSearchResults();
@@ -63,7 +62,11 @@ export default function SearchResults({
     <div>
       <ul className="artist-search-ul" data-cy="artist-search-list">
         {searchResults.map((artist, index) => {
-          return <SearchResultItem index={index} handleArtistClick={handleArtistClick} artist={artist} />
+          return (
+            <div key={index}>
+              <SearchResultItem handleArtistClick={handleArtistClick} artist={artist} />
+            </div>
+            )
         }
         )}
       </ul>

@@ -3,12 +3,9 @@ import { ISearchResult } from "../../types";
 interface SearchResultItemPropsType {
     handleArtistClick: (a: string, b:string) => void;
     artist: ISearchResult;
-    index: number;
 }
 
-export default function SearchResultItem({handleArtistClick, artist, index}: SearchResultItemPropsType) {
-    console.log(artist)
-  
+export default function SearchResultItem({handleArtistClick, artist}: SearchResultItemPropsType) {
     return (
     <li
       className="artist-search-li"
@@ -17,7 +14,6 @@ export default function SearchResultItem({handleArtistClick, artist, index}: Sea
       onClick={() => {
         handleArtistClick(artist.id, artist.name);
       }}
-      key={index}
     >
       <div className="artist-search-thumb-container">
         {artist.images[2] && (

@@ -1,19 +1,20 @@
 import CollectionList from './CollectionList'
-import { ICollection } from "../../types";
+import { ICollection, Token } from "../../types";
 
 
 interface CollectionComponentProp {
   collectionsDB: ICollection[];
+  currentToken: Token
 }
 
-const Collection = ({ collectionsDB }: CollectionComponentProp) => {
+const Collection = ({ collectionsDB, currentToken }: CollectionComponentProp) => {
   if (collectionsDB.length == 0) return <p className='collection-title'>Save some playlists to see them here.</p>
 
   return (
     <main>
-      <div className='collections-container'>
+      <div className='collections-container' id='playlists-anchor'>
         <p className='collections-title'>Your Saved Collections</p>
-        <CollectionList collectionsDB={collectionsDB} />
+        <CollectionList currentToken={currentToken} collectionsDB={collectionsDB} />
       </div>
     </main>
   )

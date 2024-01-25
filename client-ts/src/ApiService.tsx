@@ -111,7 +111,6 @@ const apiService = {
       },
     });
     const data = await response.json();
-    console.log(data)
     return data;
   },
   getUserPlaylists: async (token: Token, user_id: string) => {
@@ -123,7 +122,6 @@ const apiService = {
       },
     });
     const data = await response.json();
-    console.log(data)
     return data;
   },
   savePlaylist: async (tracks: ICollection) => {
@@ -156,6 +154,40 @@ const apiService = {
     const tracks = await response.json();
     return tracks;
   },
+  spotifyCreateBlankPlaylist: async (playlistName: string, token: Token) => {
+    const body = {
+      name: playlistName,
+      description: playlistName,
+      public: false
+    }
+
+    const userID = import.meta.env.VITE_APP_SPOTIFY_USER_ID
+    console.log(token.token)
+    const url = `https://api.spotify.com/v1/users/${userID}/playlists`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: "Bearer " + `${token.token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    })
+
+    const data = await response.json();
+    return data.id;
+  },
+  spotifyAddSongsToPlaylist: async (playlist_id: string, token: Token, uris: string[]) => {
+    console.log(JSON.stringify({uris}))
+    const url = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks`;
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + `${token.token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({uris})
+    })
+  }
 };
 
 export default apiService;
