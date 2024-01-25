@@ -31,13 +31,22 @@ function App() {
 
   const loadToken = async () => {
     const previousToken = await apiService.retrieveToken();
-    if (apiService.validateToken(previousToken)) {
-      setCurrentToken(previousToken);
+
+    if (previousToken) {
+      if (await apiService.validateToken(previousToken)) {
+        setCurrentToken(previousToken);
+      } else {
+        const newToken = await apiService.getNewToken();
+        await apiService.saveToken(newToken);
+        setCurrentToken(newToken);
+      }
     } else {
+      //No token currently saved in db
       const newToken = await apiService.getNewToken();
-      apiService.saveToken(newToken);
+      await apiService.saveToken(newToken);
+      setCurrentToken(newToken);
     }
-  }
+  };
 
   const loadData = async () => {
     try {

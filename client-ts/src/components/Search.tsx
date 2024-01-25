@@ -33,7 +33,7 @@ const Search = ({currentToken}: SearchPropsType) => {
 
   return (
     <>
-    <button onClick={async () => {
+    {/* <button onClick={async () => {
       console.log(currentToken)
       const id: string = import.meta.env.VITE_APP_SPOTIFY_USER_ID;
       await apiService.getUserPlaylists(currentToken, id)
@@ -41,8 +41,7 @@ const Search = ({currentToken}: SearchPropsType) => {
       >GET USER PLAYLISTS</button>
       <button onClick={async () => await apiService.saveToken(currentToken)}>SAVE TOKEN</button>
       <button onClick={async () => console.log(await apiService.retrieveToken())}>LOAD TOKEN</button>
-      <button onClick={async () => await apiService.deleteToken()}>DELETE TOKEN</button>
-
+      <button onClick={async () => await apiService.deleteToken()}>DELETE TOKEN</button> */}
 
 
       <form className="searchForm" onSubmit={(e) => e.preventDefault()}>

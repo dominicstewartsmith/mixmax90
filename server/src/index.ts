@@ -29,3 +29,6 @@ mongoose.connect(`${MONGO_URL}`)
           app.listen(PORT, () => console.log(`🟢 Server listening on port ${PORT}.`))})
         .catch(error => console.log('🔴 Database failed to connect.\n', error))
 console.timeEnd('Server loaded in: ')
+
+const test = 1706139304538 + (3600*1000)
+console.log(test)

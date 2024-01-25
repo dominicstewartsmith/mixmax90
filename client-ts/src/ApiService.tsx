@@ -2,20 +2,22 @@ import { ICollection, Token } from "../types.ts";
 // TODO Only request new API Token if current one is >60m old (use a state hook).
 
 const apiService = {
-  validateToken: (token: Token): boolean => {
-    const now = Date.now()
-    if ((token.time + (3600 * 1000)) < now) {
-      console.log('Token expired.')
-      //Token has expired
-      return false
-    } else {
-      const issueTimePlusOneHour = token.time + (3600 * 1000)
-      const validUntil = Date.now() - issueTimePlusOneHour
-      const validUntilAsSeconds = validUntil / 1000
-      const validUntilAsMinutes = validUntilAsSeconds / 60
+  validateToken: async (token: Token): Promise<any> => {
+    const timeTokenIssued = token.time;
+    const tokenValidForInSeconds = 3600;
+    const tokenExpiresAt = timeTokenIssued + (tokenValidForInSeconds * 1000);
 
-      const timeLeft = Math.floor(validUntilAsMinutes * -1)
-      console.log(`Token still valid. Expires in ${timeLeft}m`)
+    let tokenExpiresAtAsDate = new Date(tokenExpiresAt)
+    let currentTimeAsDate = new Date(Date.now())
+
+    if (currentTimeAsDate > tokenExpiresAtAsDate) {
+      console.log('Token expired.')
+      await apiService.deleteToken()
+      return false;
+    } else {
+      const dateDifference = currentTimeAsDate.getTime() - tokenExpiresAtAsDate.getTime()
+      const inMinutes = Math.floor(dateDifference / 1000 / 60 * -1)
+      console.log(`Token still valid. Expires in ${inMinutes}m`)
       return true;
     }
   },

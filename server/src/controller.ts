@@ -75,7 +75,9 @@ async function saveToken (req: Request, res: Response) {
 async function retrieveToken (req: Request, res: Response) {
   try {
     const response = await TokenModel.findOne();
-    res.status(200).send(response)
+    if (response) {
+      res.status(200).send(response)
+    } else res.status(200).send('null')
   } catch (error) {
     console.log(error);
   }
