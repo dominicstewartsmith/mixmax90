@@ -37,7 +37,7 @@ export default function CollectionListItem({ playlists, parentID }: CollectionLi
             <button onClick={async () => {
               await apiService.deletePlaylist(parentID, playlist._id);
               handleUpdateDB();
-              }} className="collections-playlist-delete" data-cy="collections-playlist-delete">Delete</button>
+              }} className="collections-playlist-delete" data-cy="collections-playlist-delete" data-testid="collections-playlist-delete">Delete</button>
             <br />
 
             {showSongs[index] == true &&
@@ -45,7 +45,7 @@ export default function CollectionListItem({ playlists, parentID }: CollectionLi
                 return (
                   <div className="playlist-container" key={track.id}>
                     <div className="playlist-artist-name">{track.artists[0].name}</div>
-                    <div className="playlist-song-name" data-cy="playlist-song-name">{track.name}</div>
+                    <div className="playlist-song-name" data-cy="playlist-song-name" data-testid="playlist-song-name">{track.name}</div>
                   </div>
                 )
               })
