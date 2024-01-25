@@ -4,6 +4,7 @@ import { getTracksUpToNinetyMinutes } from "../helpers";
 import apiService from "../ApiService";
 import { IArtist, ISearchResult, ITopTracks, ITrack, Token } from "../../types";
 import PlaylistResults from "./PlaylistResults";
+import SearchResultItem from "./SearchResultItem";
 
 type SearchResultsPropsType = {
   searchResults: ISearchResult[];
@@ -61,28 +62,10 @@ export default function SearchResults({
   return (
     <div>
       <ul className="artist-search-ul" data-cy="artist-search-list">
-        {searchResults.map((artist, index) => (
-          <li
-            className="artist-search-li"
-            data-cy="artist-search-item"
-            data-testid="artist-search-item"
-            onClick={() => {
-              handleArtistClick(artist.id, artist.name);
-            }}
-            key={index}
-          >
-            <div className="artist-search-thumb-container">
-              {artist.images[2] && (
-                <img
-                  className="artist-search-thumb-img"
-                  src={artist.images[2].url}
-                  alt=""
-                />
-              )}
-            </div>
-            <div className="artist-search-name">{artist.name}</div>
-          </li>
-        ))}
+        {searchResults.map((artist, index) => {
+          return <SearchResultItem index={index} handleArtistClick={handleArtistClick} artist={artist} />
+        }
+        )}
       </ul>
 
       {showTopTracks && (
