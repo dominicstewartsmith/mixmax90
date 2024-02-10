@@ -42,7 +42,7 @@ const Search = ({currentToken}: SearchPropsType) => {
       <button onClick={async () => await apiService.saveToken(currentToken)}>SAVE TOKEN</button>
       <button onClick={async () => console.log(await apiService.retrieveToken())}>LOAD TOKEN</button>
       <button onClick={async () => await apiService.deleteToken()}>DELETE TOKEN</button> */}
-      <button onClick={() => {
+      {/* <button onClick={() => {
         window.localStorage.setItem("token", currentToken.token)
         window.localStorage.setItem("issued", currentToken.time.toString())
       }}>Save Local</button>
@@ -52,6 +52,11 @@ const Search = ({currentToken}: SearchPropsType) => {
         let b = window.localStorage.getItem("issued")
         console.log(a,b)
       }}>Load Local</button>
+
+      <button onClick={() => {
+        window.localStorage.clear();
+        console.log("token cleared:", window.localStorage.getItem("token"))
+      }}>Delete Local</button> */}
 
 
       <form className="searchForm" onSubmit={(e) => e.preventDefault()}>

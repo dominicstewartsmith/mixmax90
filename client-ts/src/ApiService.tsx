@@ -1,5 +1,4 @@
 import { ICollection, Token } from "../types.ts";
-// TODO Only request new API Token if current one is >60m old (use a state hook).
 
 const apiService = {
   getNewToken: async () => {
@@ -17,7 +16,7 @@ const apiService = {
 
     const data = await response.json();
     const now = Date.now();
-    console.log(`🟢 New token requested: ${data.access_token}. \nStored at ${new Date(now)}.`)
+    console.log(`🟢 New token received.\nStored at ${new Date(now)}.`)
 
     return { token: data.access_token, time: now }
   },
@@ -30,16 +29,6 @@ const apiService = {
       body: JSON.stringify(token)
     })
     console.log('Token saved.')
-  },
-  retrieveToken: async () => {
-    const response = await fetch('http://127.0.0.1:3000/retrieveToken');
-    const data = await response.json();
-    return data;
-  },
-  deleteToken: async () => {
-    await fetch('http://127.0.0.1:3000/deleteToken', {
-      method: 'DELETE'
-    })
   },
   getArtistId: async (artistName: string, token: Token) => {
     const searchUrl = `https://api.spotify.com/v1/search?q=${artistName}&type=artist`;

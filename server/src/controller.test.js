@@ -17,7 +17,7 @@ describe('Integration tests', () => {
     const request = supertest(app);
 
     beforeAll(async () => {
-        await mongoose.connect("mongodb+srv://dominicstewartsmith:pWlC5mllh7DfTLej@cluster0.yegtkhq.mongodb.net/test");
+        await mongoose.connect(process.env.MONGO_URL);
     })
 
     afterEach(async () => {
@@ -71,25 +71,25 @@ describe('Integration tests', () => {
 
     it("should delete a playlist inside a collection", async () => {
         const collection = data;
-    
+
         await request.post("/savePlaylist").send(collection).expect(201);
-    
+
         const resDB = await request.get("/getCollections").expect(200);
-    
+
         const parentID = resDB.body[0]._id;
         const playlistID = resDB.body[0].playlists[0]._id;
         const payload = {
             parent: parentID,
             playlist: playlistID
         }
-    
+
         await request.post("/savePlaylist").send(collection).expect(201);
         await request.post("/savePlaylist").send(collection).expect(201);
-    
+
         await request.delete("/deletePlaylist").send(payload).expect(200);
-    
+
         const collectionResponse = await request.get("/getCollections").expect(200);
-    
+
         expect(collectionResponse.body[0].playlists.length).toBe(2);
       });
 })

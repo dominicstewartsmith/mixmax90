@@ -1,5 +1,12 @@
-const db = require("./db");
-const Schema = db.Schema;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.mongoose = exports.TokenModel = exports.Collection = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
+exports.mongoose = mongoose_1.default;
+const Schema = mongoose_1.default.Schema;
 const artistSchema = new Schema({
     external_urls: {
         spotify: String,
@@ -56,11 +63,17 @@ const trackSchema = new Schema({
     uri: String,
 });
 const topTracksSchema = new Schema({
-    tracks: [trackSchema]
+    tracks: [trackSchema],
 });
 const collectionSchema = new Schema({
     artistName: String,
-    playlists: [topTracksSchema]
+    playlists: [topTracksSchema],
 });
-const Collection = db.model("Collection", collectionSchema);
-module.exports = Collection;
+const tokenSchema = new Schema({
+    token: String,
+    time: Number
+});
+const TokenModel = mongoose_1.default.model("Token", tokenSchema);
+exports.TokenModel = TokenModel;
+const Collection = mongoose_1.default.model("Collection", collectionSchema);
+exports.Collection = Collection;

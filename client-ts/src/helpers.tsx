@@ -69,7 +69,9 @@ export function getTracksUpToNinetyMinutes(tracks: ITopTracks[]) {
     throw new Error('Error fetching songs, please try again.')
   }
 }
-export async function validateToken (token: Token): Promise<any> {
+export function validateToken (token: Token): boolean {
+  if (!token.token) return false;
+  
   const timeTokenIssued = token.time;
   const tokenValidForInSeconds = 3600;
   const tokenExpiresAt = timeTokenIssued + (tokenValidForInSeconds * 1000);
@@ -79,7 +81,6 @@ export async function validateToken (token: Token): Promise<any> {
 
   if (currentTimeAsDate > tokenExpiresAtAsDate) {
     console.log('Token expired.')
-    // await apiService.deleteToken()
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("issuedAt");
     return false;

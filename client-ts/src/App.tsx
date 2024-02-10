@@ -31,28 +31,25 @@ function App() {
   }
 
   const loadToken = async () => {
-    // const previousToken = await apiService.retrieveToken();
     const previousToken: string = window.localStorage.getItem("token") || "";
     const previousTokenTime: number = Number(window.localStorage.getItem('issuedAt'));
 
     let token = { token: previousToken, time: previousTokenTime }
 
-    if (previousToken) {
-      if (await validateToken(token)) {
+    if (previousToken.length) {
+      if (validateToken(token)) {
         setCurrentToken(token);
       } else {
         const newToken = await apiService.getNewToken();
         window.localStorage.setItem("token", newToken.token);
         window.localStorage.setItem("issuedAt", newToken.time.toString());
-        // await apiService.saveToken(newToken);
         setCurrentToken(newToken);
       }
     } else {
-      //No token currently saved in db
+      //No token currently saved
       const newToken = await apiService.getNewToken();
       window.localStorage.setItem("token", newToken.token);
       window.localStorage.setItem("issuedAt", newToken.time.toString());
-      // await apiService.saveToken(newToken);
       setCurrentToken(newToken);
     }
   };
@@ -69,8 +66,10 @@ function App() {
   };
 
   useEffect(() => {
-    loadData();
-    loadToken();
+    loadToken().then(() => {
+      console.log('token loaded')
+      loadData()
+    }).catch(err => console.log(err))
   }, []);
 
   if (loadingError) return <h2>Error connecting to the server 😔</h2>;
