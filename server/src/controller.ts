@@ -1,4 +1,4 @@
-import { Collection, TokenModel, ICollection, IToken } from "./models";
+import { Collection, ICollection, IToken } from "./models";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import {Types} from "mongoose";
@@ -63,33 +63,4 @@ async function getCollections(req: Request, res: Response) {
   }
 }
 
-async function saveToken (req: Request, res: Response) {
-  try {
-    await TokenModel.deleteMany();
-    await TokenModel.create(req.body);
-    res.status(201).send("Created");
-  } catch (error) {
-    console.log(error)
-  }
-}
-async function retrieveToken (req: Request, res: Response) {
-  try {
-    const response = await TokenModel.findOne();
-    if (response) {
-      res.status(200).send(response)
-    } else res.status(200).send('null')
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function deleteToken(req: Request, res: Response) {
-  try {
-    await TokenModel.deleteMany();
-    res.status(200).send('OK')
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-export { savePlaylist, getCollections, deletePlaylist, saveToken, retrieveToken, deleteToken };
+export { savePlaylist, getCollections, deletePlaylist };

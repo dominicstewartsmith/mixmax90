@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteToken = exports.retrieveToken = exports.saveToken = exports.deletePlaylist = exports.getCollections = exports.savePlaylist = void 0;
+exports.deletePlaylist = exports.getCollections = exports.savePlaylist = void 0;
 const models_1 = require("./models");
 const mongoose_1 = __importDefault(require("mongoose"));
 async function savePlaylist(req, res) {
@@ -60,38 +60,3 @@ async function getCollections(req, res) {
     }
 }
 exports.getCollections = getCollections;
-async function saveToken(req, res) {
-    try {
-        await models_1.TokenModel.deleteMany();
-        await models_1.TokenModel.create(req.body);
-        res.status(201).send("Created");
-    }
-    catch (error) {
-        console.log(error);
-    }
-}
-exports.saveToken = saveToken;
-async function retrieveToken(req, res) {
-    try {
-        const response = await models_1.TokenModel.findOne();
-        if (response) {
-            res.status(200).send(response);
-        }
-        else
-            res.status(200).send('null');
-    }
-    catch (error) {
-        console.log(error);
-    }
-}
-exports.retrieveToken = retrieveToken;
-async function deleteToken(req, res) {
-    try {
-        await models_1.TokenModel.deleteMany();
-        res.status(200).send('OK');
-    }
-    catch (error) {
-        console.log(error);
-    }
-}
-exports.deleteToken = deleteToken;
