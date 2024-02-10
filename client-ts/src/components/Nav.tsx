@@ -1,6 +1,4 @@
-import { GoHome } from "react-icons/go";
 import { VscLibrary } from "react-icons/vsc";
-import { VscAccount } from "react-icons/vsc";
 
 //TODO make these button components clickable and take you to relevant routes
 
@@ -19,7 +17,7 @@ const Nav = () => {
           <li className="nav-item">
             {/* <Link to="/collection"> */}
 
-            <a href="#playlists-anchor"><VscLibrary /></a>
+            <a href="#playlists-anchor" style={{color: "#8ebf42", scrollBehavior: "smooth"}}><VscLibrary /></a>
             {/* <br />
               Collection */}
             {/* </Link> */}

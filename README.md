@@ -7,7 +7,7 @@ This was done in collaboration with [Diego Saborido](https://github.com/diegoss-
 
 # The Challenge
 
-Although we both really liked the look of the original product from a presentation that was given, after deciding on this product and forking it, it became apparent that a lot of the demonstrated functionality was hard-coded. Nonetheless we carried on and came out the other side with a great app that we are both very proud of.
+Although we both really liked the look of the original product from a presentation that was given, after deciding on this app and forking it, it became apparent that a lot of the demonstrated functionality was hard-coded. Nonetheless we carried on and came out the other side with a great app that we are both very proud of.
 
 # The Changes
 
@@ -18,19 +18,30 @@ Although we both really liked the look of the original product from a presentati
 - Added the ability to save the current playlist to a database.
 - Added the ability to browse saved playlists (original implementation was hard-coded and not actually parsing the database).
 - Added a landing page to display a message if the front-end cannot connect to the server (included adding some error handling in the server).
-- Made the playlist generator retrieve approx 90 minutes worth of tracks (original implementation was randomised).
+- Made the playlist generator retrieve approx 90 minutes worth of tracks (original implementation was randomised), and every retrieved song is unique.
 - Changed it from the original implementation so that an access token would not be requested on every single API request.
 - Added tests to the back-end.
+- Added the ability to preview the audio of each track.
 
 # Screenshots & Video Demo
 
+[Video Demo (YouTube)](https://youtu.be/G4hpt0uq8e4)
+
+![](/screenshots/initial-state.png)
+![](/screenshots/artist-search.png)
+![](/screenshots/playlist-results.png)
+![](/screenshots/saved-playlists.png)
+
 # How To Run
+
+To run locally you will need the following:
 
 You will need access to an instance of MongoDB, either locally or cloud hosted.
 Place the URI to your database in ./server/.env following the format from .env.example.
 
-You will need a Spotify premium account to use this app.
-You will also need an API key and client secret from [Spotify for Developers.](https://developer.spotify.com/documentation/web-api)
+You will also need a Spotify account to use this app.
+Get an API key and client secret from [Spotify for Developers.](https://developer.spotify.com/documentation/web-api)
 Place these keys in ./client-ts/.env, following the example formatting from .env.example.
 
-In ./server run `node index.js`
+In ./server & ./client-ts run `npm i`.
+In ./server run `npm run dev`, and also in ./client-ts.
