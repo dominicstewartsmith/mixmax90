@@ -3,7 +3,7 @@
 This project was built upon [the original repo](https://github.com/joshuajcarter/mixmax90) by [Joshua Carter](https://joshuajcarter.com/).
 The one-week task was to take the original project and refactor it, add features, convert all of the code to Typescript, and add tests.
 
-This was done in collaboration with [Diego Saborido](https://github.com/diegoss-github), as paired programming.
+This was done in collaboration with [Diego Saborido](https://github.com/diegosarkissian), as paired programming.
 
 # The Challenge
 
